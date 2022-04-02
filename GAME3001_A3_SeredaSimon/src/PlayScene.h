@@ -36,6 +36,7 @@ private:
 	std::vector<PathNode*> m_pGrid;
 	void m_buildGrid();
 	void m_toggleGrid(bool state);
+	
 	bool m_checkAgentLOS(Agent* agent, DisplayObject* target_object);
 	bool m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object);
 	void m_checkAllNodesWithTarget(DisplayObject* target_object);

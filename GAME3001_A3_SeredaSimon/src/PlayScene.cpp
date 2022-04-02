@@ -25,6 +25,13 @@ void PlayScene::draw()
 void PlayScene::update()
 {
 	updateDisplayList();
+	
+	switch (m_LOSMode)
+	{
+	case 0:
+		m_checkAllNodesWithTarget(m_pTarget);
+		break;
+	}
 }
 
 void PlayScene::clean()
@@ -34,6 +41,20 @@ void PlayScene::clean()
 
 void PlayScene::handleEvents()
 {
+	if (EventManager::Instance().keyPressed(SDL_SCANCODE_H))
+	{
+		if (m_isGridEnabled)
+		{
+			m_isGridEnabled = false;
+			m_toggleGrid(false);
+		}
+		else
+		{
+			m_isGridEnabled = true;
+			m_toggleGrid(true);
+		}
+	}
+
 	EventManager::Instance().update();
 }
 
@@ -158,9 +179,9 @@ void PlayScene::m_checkAllNodesWithBoth()
 {
 	for (auto path_node : m_pGrid)
 	{
-		/*bool LOSWithPlayer = m_checkPathNodeLOS(path_node, m_pPlayer);
+		bool LOSWithPlayer = m_checkPathNodeLOS(path_node, m_pPlayer);
 		bool LOSWithTarget = m_checkPathNodeLOS(path_node, m_pTarget);
-		path_node->setHasLOS((LOSWithPlayer && LOSWithTarget ? true : false));*/
+		path_node->setHasLOS((LOSWithPlayer && LOSWithTarget ? true : false));
 	}
 }
 
@@ -198,6 +219,22 @@ void PlayScene::GUI_Function()
 	{
 		m_toggleGrid(m_isGridEnabled);
 	}
+	ImGui::Separator();
 
+	if (ImGui::Button("Node LOS to Target", { 300,20 }))
+	{
+		m_LOSMode = 0;
+	}
+
+	if (m_LOSMode == 0)
+	{
+		ImGui::SameLine();
+		ImGui::Text("<Active>");
+	}
+
+	if (ImGui::SliderInt("Path Node LOS Distance", &m_pathNodeLOSDistance, 0, 1000))
+	{
+		m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
+	}
 	ImGui::End();
 }
