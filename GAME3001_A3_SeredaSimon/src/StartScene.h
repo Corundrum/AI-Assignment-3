@@ -19,12 +19,9 @@ public:
 	virtual void clean() override;
 	virtual void handleEvents() override;
 	virtual void start() override;
-	
-private:
-	Label* m_pStartLabel{};
-	Label* m_pInstructionsLabel{};
 
-	Ship* m_pShip{};
+private:
+	Label* m_pSimonName{};
 
 	Button* m_pStartButton;
 };
