@@ -22,7 +22,7 @@ public:
 	virtual void start() override;
 private:
 	// IMGUI Function
-	void GUI_Function() const;
+	void GUI_Function();
 	std::string m_guiTitle;
 
 	bool m_isGridEnabled;

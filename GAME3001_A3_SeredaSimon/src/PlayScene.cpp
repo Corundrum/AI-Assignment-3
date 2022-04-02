@@ -43,7 +43,9 @@ void PlayScene::start()
 
 	//TODO: Background
 
-	
+	m_isGridEnabled = false;
+	m_buildGrid();
+	m_toggleGrid(m_isGridEnabled);
 
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
 }
@@ -84,35 +86,86 @@ void PlayScene::m_buildGrid()
 
 void PlayScene::m_toggleGrid(bool state)
 {
+	for (auto path_node : m_pGrid)
+	{
+		path_node->setVisible(state);
+	}
 }
 
 bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object)
 {
-	return false;
+	bool hasLOS = false;
+	agent->setHasLOS(hasLOS);
+	// if ship to target distance is less than or equal to LOS Distance
+	auto AgentToTargetDistance = Util::getClosestEdge(agent->getTransform()->position, target_object);
+	if (AgentToTargetDistance <= agent->getLOSDistance())
+	{
+		std::vector<DisplayObject*> contactList;
+		for (auto object : getDisplayList())
+		{
+			if (object->getType() == NONE) continue; // Added Lab 7.
+			auto AgentToObjectDistance = Util::getClosestEdge(agent->getTransform()->position, object);
+			if (AgentToObjectDistance > AgentToTargetDistance) continue;
+			if ((object->getType() != AGENT) && (object->getType() != PATH_NODE) && (object->getType() != TARGET))
+			{
+				contactList.push_back(object);
+			}
+		}
+		const glm::vec2 agentEndPoint = agent->getTransform()->position + agent->getCurrentDirection() * agent->getLOSDistance();
+		hasLOS = CollisionManager::LOSCheck(agent,
+			agentEndPoint, contactList, target_object);
+		agent->setHasLOS(hasLOS);
+	}
+	return hasLOS;
 }
 
 bool PlayScene::m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object)
 {
-	return false;
+	// check angle to target so we can still use LOS distance for path_nodes
+	auto targetDirection = target_object->getTransform()->position - path_node->getTransform()->position;
+	auto normalizedDirection = Util::normalize(targetDirection);
+	path_node->setCurrentDirection(normalizedDirection);
+
+	return m_checkAgentLOS(path_node, target_object);
 }
 
 void PlayScene::m_checkAllNodesWithTarget(DisplayObject* target_object)
 {
+	for (auto path_node : m_pGrid)
+	{
+		m_checkPathNodeLOS(path_node, target_object);
+	}
 }
 
 void PlayScene::m_checkAllNodesWithBoth()
 {
+	for (auto path_node : m_pGrid)
+	{
+		/*bool LOSWithPlayer = m_checkPathNodeLOS(path_node, m_pPlayer);
+		bool LOSWithTarget = m_checkPathNodeLOS(path_node, m_pTarget);
+		path_node->setHasLOS((LOSWithPlayer && LOSWithTarget ? true : false));*/
+	}
 }
 
 void PlayScene::m_clearNodes()
 {
+	m_pGrid.clear();
+	for (auto object : getDisplayList())
+	{
+		if (object->getType() == PATH_NODE)
+			removeChild(object);
+	}
 }
 
 void PlayScene::m_setPathNodeLOSDistance(int distance)
 {
+	for (auto path_node : m_pGrid)
+	{
+		path_node->setLOSDistance((float)distance);
+	}
 }
 
-void PlayScene::GUI_Function() const
+void PlayScene::GUI_Function()
 {
 	// Always open with a NewFrame
 	ImGui::NewFrame();
@@ -120,22 +173,13 @@ void PlayScene::GUI_Function() const
 	// See examples by uncommenting the following - also look at imgui_demo.cpp in the IMGUI filter
 	//ImGui::ShowDemoWindow();
 
-	ImGui::Begin("Your Window Title Goes Here", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoMove);
-
-	if (ImGui::Button("My Button"))
-	{
-		std::cout << "My Button Pressed" << std::endl;
-	}
+	ImGui::Begin("Lab 7 Debug Properties", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoMove);
 
 	ImGui::Separator();
 
-	static float float3[3] = { 0.0f, 1.0f, 1.5f };
-	if (ImGui::SliderFloat3("My Slider", float3, 0.0f, 2.0f))
+	if (ImGui::Checkbox("Toggle Grid", &m_isGridEnabled))
 	{
-		std::cout << float3[0] << std::endl;
-		std::cout << float3[1] << std::endl;
-		std::cout << float3[2] << std::endl;
-		std::cout << "---------------------------\n";
+		m_toggleGrid(m_isGridEnabled);
 	}
 
 	ImGui::End();
