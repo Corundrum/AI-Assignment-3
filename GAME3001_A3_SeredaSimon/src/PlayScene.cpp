@@ -34,10 +34,29 @@ void PlayScene::update()
 {
 	updateDisplayList();
 	
+
+	//m_pEnemy->getTree()->getLOSNode()->setLOS(m_pEnemy->checkAgentLOSToTarget(m_pEnemy, m_pPlayer, m_pObstacles));
+
+	for (auto enemy : m_pMeleeEnemies)
+	{
+		enemy->getTree()->getLOSNode()->setLOS(enemy->checkAgentLOSToTarget(enemy, m_pPlayer, m_pObstacles));
+	}
+	for (auto enemy : m_pRangedEnemies)
+	{
+		enemy->getTree()->getLOSNode()->setLOS(enemy->checkAgentLOSToTarget(enemy, m_pPlayer, m_pObstacles));
+	}
+
 	switch (m_LOSMode)
 	{
 	case 0:
-		m_checkAllNodesWithTarget(m_pTarget);
+		for (auto enemy : m_pMeleeEnemies)
+		{
+			m_checkAllNodesWithTarget(enemy);
+		}
+		for (auto enemy : m_pRangedEnemies)
+		{
+			m_checkAllNodesWithTarget(enemy);
+		}
 		break;
 	}
 }
@@ -55,12 +74,39 @@ void PlayScene::handleEvents()
 		{
 			m_isGridEnabled = false;
 			m_toggleGrid(false);
+			for (auto enemy : m_pMeleeEnemies)
+			{
+				enemy->debug = 0;
+			}
+			for (auto enemy : m_pRangedEnemies)
+			{
+				enemy->debug = 0;
+			}
 		}
 		else
 		{
 			m_isGridEnabled = true;
 			m_toggleGrid(true);
+			for (auto enemy : m_pMeleeEnemies)
+			{
+				enemy->debug = 1;
+			}
+			for (auto enemy : m_pRangedEnemies)
+			{
+				enemy->debug = 1;
+			}
 		}
+	}
+
+	if (EventManager::Instance().keyPressed(SDL_SCANCODE_R))
+	{
+		m_pRangedEnemies.push_back(new RangedCombatEnemy());
+		m_pRangedEnemies.back()->getTransform()->position = glm::vec2(400, 40);
+		if (m_isGridEnabled)
+		{
+			m_pRangedEnemies.back()->debug = 1;
+		}
+		addChild(m_pRangedEnemies.back());
 	}
 
 	EventManager::Instance().update();
@@ -76,13 +122,17 @@ void PlayScene::start()
 	m_pObstacles.back()->getTransform()->position = glm::vec2(250, 500);
 	addChild(m_pObstacles.back());
 
-	m_pTarget = new Target();
-	m_pTarget->getTransform()->position = glm::vec2(600, 300);
-	addChild(m_pTarget);
+	m_pMeleeEnemies.push_back(new CloseCombatEnemy());
+	m_pMeleeEnemies.back()->getTransform()->position = glm::vec2(400, 40);
+	addChild(m_pMeleeEnemies.back());
+
+	m_pRangedEnemies.push_back(new RangedCombatEnemy());
+	m_pRangedEnemies.back()->getTransform()->position = glm::vec2(350, 40);
+	addChild(m_pRangedEnemies.back());
 
 	m_pPlayer = new Player();
 	m_pPlayer->getTransform()->position = glm::vec2(150, 400);
-	addChild(m_pPlayer);
+	addChild(m_pPlayer, 2);
 
 	m_LOSMode = 0;
 	m_obstacleBuffer = 0;
@@ -180,16 +230,6 @@ void PlayScene::m_checkAllNodesWithTarget(DisplayObject* target_object)
 	for (auto path_node : m_pGrid)
 	{
 		m_checkPathNodeLOS(path_node, target_object);
-	}
-}
-
-void PlayScene::m_checkAllNodesWithBoth()
-{
-	for (auto path_node : m_pGrid)
-	{
-		bool LOSWithPlayer = m_checkPathNodeLOS(path_node, m_pPlayer);
-		bool LOSWithTarget = m_checkPathNodeLOS(path_node, m_pTarget);
-		path_node->setHasLOS((LOSWithPlayer && LOSWithTarget ? true : false));
 	}
 }
 

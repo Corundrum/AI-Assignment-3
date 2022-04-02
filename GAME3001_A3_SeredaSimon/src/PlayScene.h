@@ -9,6 +9,9 @@
 #include "PathNode.h"
 #include "Obstacle.h"
 
+#include "CloseCombatEnemy.h"
+#include "RangedCombatEnemy.h"
+
 class PlayScene : public Scene
 {
 public:
@@ -29,7 +32,10 @@ private:
 	bool m_isGridEnabled;
 	
 	Player* m_pPlayer;
-	Target* m_pTarget;
+
+	std::vector<CloseCombatEnemy*> m_pMeleeEnemies;
+	std::vector<RangedCombatEnemy*> m_pRangedEnemies;
+	
 	std::vector<Obstacle*> m_pObstacles;
 
 	//path node objects and functions
@@ -40,7 +46,6 @@ private:
 	bool m_checkAgentLOS(Agent* agent, DisplayObject* target_object);
 	bool m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object);
 	void m_checkAllNodesWithTarget(DisplayObject* target_object);
-	void m_checkAllNodesWithBoth();
 	void m_clearNodes();
 	void m_setPathNodeLOSDistance(int distance);
 
