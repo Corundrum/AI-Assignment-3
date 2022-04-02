@@ -9,6 +9,9 @@
 #include "PathNode.h"
 #include "Obstacle.h"
 
+#include "Tile.h"
+#include "TileObjects.h"
+
 #include "CloseCombatEnemy.h"
 #include "RangedCombatEnemy.h"
 
@@ -55,6 +58,8 @@ private:
 	int m_obstacleBuffer;
 	int m_pathNodeLOSDistance;
 	
+	//tilemap
+	std::vector<std::pair<std::string, TileObject*>> m_tiles;
 
 };
 

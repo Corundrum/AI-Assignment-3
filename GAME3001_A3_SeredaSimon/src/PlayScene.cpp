@@ -18,6 +18,12 @@ PlayScene::~PlayScene()
 
 void PlayScene::draw()
 {
+	for (auto const& i : m_tiles)
+	{
+		i.second->draw();
+	}
+
+
 	drawDisplayList();
 
 	float health_percent = playerHealth / 100.0;
@@ -49,14 +55,7 @@ void PlayScene::update()
 	switch (m_LOSMode)
 	{
 	case 0:
-		for (auto enemy : m_pMeleeEnemies)
-		{
-			m_checkAllNodesWithTarget(enemy);
-		}
-		for (auto enemy : m_pRangedEnemies)
-		{
-			m_checkAllNodesWithTarget(enemy);
-		}
+		m_checkAllNodesWithTarget(m_pPlayer);
 		break;
 	}
 }
@@ -117,6 +116,9 @@ void PlayScene::start()
 	m_guiTitle = "Play Scene";
 
 	//TODO: Background
+
+	TextureManager::Instance().load("../Assets/tiles/MysticWoodsTileMap.png", "woodsTiles");
+	m_tiles.push_back(std::pair<std::string, TileObject*>("level", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/level.txt", "woodsTiles")));
 
 	m_pObstacles.push_back(new Obstacle());
 	m_pObstacles.back()->getTransform()->position = glm::vec2(250, 500);
