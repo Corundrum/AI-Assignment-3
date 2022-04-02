@@ -35,9 +35,6 @@ void Plane::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the plane sprite with simple propeller animation
-	TextureManager::Instance().playAnimation(
-		"spritesheet", getAnimation("plane"),
-		x, y, 0.5f, 0, 255, true);
 }
 
 void Plane::update()

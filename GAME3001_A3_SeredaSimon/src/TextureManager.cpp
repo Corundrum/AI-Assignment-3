@@ -217,7 +217,7 @@ void TextureManager::animateFrames(int frame_width, int frame_height, const int 
 void TextureManager::playAnimation(
 	const std::string & sprite_sheet_name, Animation & animation,
 	int x, int y, float speed_factor,
-	double angle, int alpha, bool centered, SDL_RendererFlip flip)
+	double angle, int alpha, GameObject* object, bool centered, SDL_RendererFlip flip)
 {
 	const auto totalFrames = animation.frames.size();
 	const int animationRate = round(totalFrames / 2 / speed_factor);
@@ -251,8 +251,8 @@ void TextureManager::playAnimation(
 	srcRect.w = animation.frames[animation.current_frame].w;
 	srcRect.h = animation.frames[animation.current_frame].h;
 
-	destRect.w = textureWidth;
-	destRect.h = textureHeight;
+	destRect.w = object->getWidth();
+	destRect.h = object->getHeight();
 
 	if (centered) {
 		const int xOffset = textureWidth * 0.5;
