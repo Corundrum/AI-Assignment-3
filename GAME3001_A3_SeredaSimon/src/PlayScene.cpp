@@ -19,6 +19,14 @@ PlayScene::~PlayScene()
 void PlayScene::draw()
 {
 	drawDisplayList();
+
+	float health_percent = playerHealth / 100.0;
+
+	Util::DrawRect(glm::vec2(15, 15), 202, 40, glm::vec4(1, 1, 1, 1));
+	Util::DrawFilledRect(glm::vec2(16, 16), 200, 38, glm::vec4(0,0,0,1));
+	Util::DrawFilledRect(glm::vec2(16, 16), 200 * health_percent, 38, glm::vec4(1, 0.2, 0.2, 1));
+
+
 	SDL_SetRenderDrawColor(Renderer::Instance().getRenderer(), 25, 25, 25, 255);
 }
 
@@ -65,7 +73,7 @@ void PlayScene::start()
 	//TODO: Background
 
 	m_pObstacles.push_back(new Obstacle());
-	m_pObstacles.back()->getTransform()->position = glm::vec2(200, 100);
+	m_pObstacles.back()->getTransform()->position = glm::vec2(250, 500);
 	addChild(m_pObstacles.back());
 
 	m_pTarget = new Target();

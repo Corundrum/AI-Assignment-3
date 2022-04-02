@@ -44,6 +44,8 @@ private:
 	void m_clearNodes();
 	void m_setPathNodeLOSDistance(int distance);
 
+	int playerHealth = 100;
+
 	int m_LOSMode;
 	int m_obstacleBuffer;
 	int m_pathNodeLOSDistance;
