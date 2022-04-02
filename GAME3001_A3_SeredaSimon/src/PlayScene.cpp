@@ -51,6 +51,10 @@ void PlayScene::start()
 	m_pTarget->getTransform()->position = glm::vec2(600, 300);
 	addChild(m_pTarget);
 
+	m_pPlayer = new Player();
+	m_pPlayer->getTransform()->position = glm::vec2(150, 400);
+	addChild(m_pPlayer);
+
 	m_LOSMode = 0;
 	m_obstacleBuffer = 0;
 	m_pathNodeLOSDistance = 1000;

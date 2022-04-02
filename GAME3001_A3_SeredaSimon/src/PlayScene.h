@@ -4,6 +4,7 @@
 
 #include "Scene.h"
 #include "Heuristic.h"
+#include "Player.h"
 #include "Target.h"
 #include "PathNode.h"
 #include "Obstacle.h"
@@ -27,6 +28,7 @@ private:
 
 	bool m_isGridEnabled;
 	
+	Player* m_pPlayer;
 	Target* m_pTarget;
 	std::vector<Obstacle*> m_pObstacles;
 
