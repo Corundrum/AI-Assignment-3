@@ -22,6 +22,7 @@ public:
 private:
 	void m_buildAnimations();
 
+	bool isFacingLeft = 0;
 	PlayerAnimationState m_currentAnimationState;
 };
 
