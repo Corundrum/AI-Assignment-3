@@ -7,6 +7,7 @@
 #include "ShapeType.h"
 #include <SDL.h>
 #include "Renderer.h"
+#include "GameObject.h"
 
 class Util
 {
@@ -52,12 +53,21 @@ public:
 	static float dot(glm::vec2 lhs, glm::vec2 rhs);
 	static float signedAngle(glm::vec2 from, glm::vec2 to);
 
+	static float angleToTarget(float dy, float dx);
+	static float degreesToTarget(float dy, float dx);
+	static float angle180(float a);
+	static float angle360(float a);
+
+	static glm::vec2 rotatePoint(glm::vec2 point, float angle, glm::vec2 pivot);
+
 	// debugging convenience functions
 	static void DrawLine(glm::vec2 start, glm::vec2 end, glm::vec4 colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), SDL_Renderer* renderer = Renderer::Instance().getRenderer());
 	static void DrawRect(glm::vec2 position, int width, int height, glm::vec4 colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), SDL_Renderer* renderer = Renderer::Instance().getRenderer());
 	static void DrawFilledRect(glm::vec2 position, int width, int height, glm::vec4 fill_colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), SDL_Renderer* renderer = Renderer::Instance().getRenderer());
 	static void DrawCircle(glm::vec2 centre, int radius, glm::vec4 colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), ShapeType type = SYMMETRICAL, SDL_Renderer* renderer = Renderer::Instance().getRenderer());
 	static void DrawCapsule(glm::vec2 position, int width, int height, glm::vec4 colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), SDL_Renderer* renderer = Renderer::Instance().getRenderer());
+
+	static float getClosestEdge(glm::vec2 vecA, GameObject* object);
 };
 
 
