@@ -12,12 +12,8 @@ Obstacle::Obstacle()
 	setWidth(size.x);
 	setHeight(size.y);
 
-	getTransform()->position = glm::vec2(300.0f, 300.0f);
-
 	setType(OBSTACLE);
 	getRigidBody()->isColliding = false;
-
-	SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
 }
 
 Obstacle::~Obstacle()

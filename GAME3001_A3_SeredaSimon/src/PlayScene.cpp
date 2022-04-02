@@ -43,6 +43,19 @@ void PlayScene::start()
 
 	//TODO: Background
 
+	m_pObstacles.push_back(new Obstacle());
+	m_pObstacles.back()->getTransform()->position = glm::vec2(200, 100);
+	addChild(m_pObstacles.back());
+
+	m_pTarget = new Target();
+	m_pTarget->getTransform()->position = glm::vec2(600, 300);
+	addChild(m_pTarget);
+
+	m_LOSMode = 0;
+	m_obstacleBuffer = 0;
+	m_pathNodeLOSDistance = 1000;
+	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
+
 	m_isGridEnabled = false;
 	m_buildGrid();
 	m_toggleGrid(m_isGridEnabled);
