@@ -100,6 +100,53 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 	return false;
 }
 
+bool CollisionManager::AABBCheck(GameObject* object1, SDL_Rect* object2)
+{
+	// prepare relevant variables
+	auto p1 = object1->getTransform()->position;
+	
+	auto p2 = glm::vec2(object2->x + object2->w / 2, object2->y + object2->h / 2);
+	
+	const float p1Width = object1->getWidth();
+	
+	const float p1Height = object1->getHeight();
+	
+	const float p2Width = object2->w;
+	
+	const float p2Height = object2->h;
+
+	if (object1->isCentered())
+	{
+		p1 += glm::vec2(-p1Width * 0.5f, -p1Height * 0.5f);
+	}
+
+	//p2 += glm::vec2(-p2Width * 0.5f, -p2Height * 0.5f);
+
+	if (
+		p1.x < p2.x + p2Width &&
+		p1.x + p1Width > p2.x &&
+		p1.y < p2.y + p2Height &&
+		p1.y + p1Height > p2.y
+		)
+	{
+		if (!object1->getRigidBody()->isColliding)
+		{
+			object1->getRigidBody()->isColliding = true;
+
+
+			return true;
+		}
+		return false;
+	}
+	else
+	{
+		object1->getRigidBody()->isColliding = false;
+		return false;
+	}
+
+	return false;
+}
+
 bool CollisionManager::AABBCheckWithBuffer(GameObject* object1, GameObject* object2, int buffer)
 {
 	// prepare relevant variables

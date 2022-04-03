@@ -4,6 +4,7 @@
 
 #include "PlayerAnimationState.h"
 #include "Sprite.h"
+#include "Bullet.h"
 
 class Player final : public Sprite
 {
@@ -29,9 +30,12 @@ public:
 private:
 	void m_buildAnimations();
 
+	std::vector<Bullet*> m_pBullets;
+
 	SDL_Rect hitBox;
 
 	bool mouseLeft;
+	bool mouseRight;
 
 	bool isFacingLeft = 0;
 	PlayerAnimationState m_currentAnimationState;

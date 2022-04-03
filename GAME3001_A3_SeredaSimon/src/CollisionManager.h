@@ -17,6 +17,7 @@ public:
 	static bool squaredRadiusCheck(GameObject* object1, GameObject* object2);
 
 	static bool AABBCheck(GameObject* object1, GameObject* object2);
+	static bool AABBCheck(GameObject* object1, SDL_Rect* object2);
 	static bool AABBCheckWithBuffer(GameObject* object1, GameObject* object2, int buffer);
 	static bool AABBCheckWithBuffer(GameObject* object1, SDL_Rect* object2, int buffer);
 

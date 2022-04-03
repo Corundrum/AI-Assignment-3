@@ -281,6 +281,7 @@ void PlayScene::start()
 
 	Player::s_pPlayerObj = new Player();
 	Player::s_pPlayerObj->getTransform()->position = glm::vec2(120, 300);
+	Player::s_pPlayerObj->setParent(this);
 	addChild(Player::s_pPlayerObj, 1);
 
 	m_pObstacles.push_back(new Obstacle());

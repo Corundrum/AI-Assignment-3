@@ -165,6 +165,7 @@
     <ClCompile Include="..\src\Agent.cpp" />
     <ClCompile Include="..\src\AttackAction.cpp" />
     <ClCompile Include="..\src\BaseEnemy.cpp" />
+    <ClCompile Include="..\src\Bullet.cpp" />
     <ClCompile Include="..\src\Button.cpp" />
     <ClCompile Include="..\src\CloseCombatCondition.cpp" />
     <ClCompile Include="..\src\CloseCombatEnemy.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="..\src\Animation.h" />
     <ClInclude Include="..\src\AttackAction.h" />
     <ClInclude Include="..\src\BaseEnemy.h" />
+    <ClInclude Include="..\src\Bullet.h" />
     <ClInclude Include="..\src\Button.h" />
     <ClInclude Include="..\src\CloseCombatCondition.h" />
     <ClInclude Include="..\src\CloseCombatEnemy.h" />

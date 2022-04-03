@@ -4,6 +4,7 @@
 #include "Util.h"
 #include "BaseEnemy.h"
 #include "SoundManager.h"
+#include "CollisionManager.h"
 
 Player::Player(): m_currentAnimationState(PLAYER_IDLE)
 {
@@ -12,6 +13,7 @@ Player::Player(): m_currentAnimationState(PLAYER_IDLE)
 		"../Assets/sprites/player.png", 
 		"playerSpriteSheet");
 
+	SoundManager::Instance().load("../Assets/audio/Explosion.wav", "explosion", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/swordSwing.wav", "sword_swing", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/Splat.wav", "splat", SOUND_SFX);
 
@@ -85,6 +87,29 @@ void Player::draw()
 			m_currentAnimationState = PLAYER_IDLE;
 		}
 		break;
+	case PLAYER_SHOOT:
+		if (!isFacingLeft)
+		{
+			TextureManager::Instance().playAnimation("playerSpriteSheet", getAnimation("shoot"),
+				x, y, 0.3f, 0, 255, this, true);
+		}
+		else
+		{
+			TextureManager::Instance().playAnimation("playerSpriteSheet", getAnimation("shoot"),
+				x, y, 0.3f, 0, 255, this, true, SDL_FLIP_HORIZONTAL);
+		}
+		if (getAnimation("shoot").current_frame == 4)
+		{
+			SoundManager::Instance().playSound("explosion");
+
+			m_pBullets.push_back(new Bullet());
+			m_pBullets.back()->getTransform()->position = glm::vec2(hitBox.x + hitBox.w * 0.5, hitBox.y + hitBox.h * 0.5);
+			m_pBullets.back()->getRigidBody()->velocity = (Util::normalize(EventManager::Instance().getMousePosition() - glm::vec2(hitBox.x + hitBox.w * 0.5, hitBox.y + hitBox.h * 0.5))) * 3.0f;
+			getParent()->addChild(m_pBullets.back());
+
+			getAnimation("shoot").current_frame = 0;
+			m_currentAnimationState = PLAYER_IDLE;
+		}
 	default:
 		break;
 	}
@@ -96,6 +121,17 @@ void Player::draw()
 void Player::update()
 {
 	hitBox = { (int)getTransform()->position.x + 5, (int)getTransform()->position.y + 20, getWidth() / 2 - 10, getHeight() / 2 - 5};
+
+	for (auto bullet : m_pBullets)
+	{
+		for (auto enemy : BaseEnemy::s_EnemiesObj)
+		{
+			if (CollisionManager::AABBCheck(bullet, &enemy->getHitBox()))
+			{
+				enemy->setHealth(enemy->getHealth() - 1);
+			}
+		}
+	}
 
 	if (m_currentAnimationState != PLAYER_COMBAT && m_currentAnimationState != PLAYER_SHOOT)
 	{
@@ -131,6 +167,7 @@ void Player::update()
 		}
 
 		Attack();
+		Shoot();
 
 	}
 }
@@ -196,6 +233,30 @@ void Player::SwordSlash()
 
 void Player::Shoot()
 {
+	if (EventManager::Instance().getMouseButton(RIGHT))
+	{
+		if (!mouseRight)
+		{
+			if (EventManager::Instance().getMousePosition().x > getTransform()->position.x)
+			{
+				isFacingLeft = false;
+			}
+			else
+			{
+				isFacingLeft = true;
+			}
+
+			mouseRight = true;
+			m_currentAnimationState = PLAYER_SHOOT;
+		}
+	}
+	else
+	{
+		if (mouseRight)
+		{
+			mouseRight = false;
+		}
+	}
 }
 
 void Player::setAnimationState(const PlayerAnimationState new_state)
@@ -232,6 +293,16 @@ void Player::m_buildAnimations()
 	AttackAnimation.frames.push_back(getSpriteSheet()->getFrame("Atk-2"));
 	AttackAnimation.frames.push_back(getSpriteSheet()->getFrame("Atk-3"));
 	setAnimation(AttackAnimation);
+
+	Animation shootAnimation = Animation();
+	shootAnimation.name = "shoot";
+	shootAnimation.frames.push_back(getSpriteSheet()->getFrame("Shoot-0"));
+	shootAnimation.frames.push_back(getSpriteSheet()->getFrame("Shoot-1"));
+	shootAnimation.frames.push_back(getSpriteSheet()->getFrame("Shoot-2"));
+	shootAnimation.frames.push_back(getSpriteSheet()->getFrame("Shoot-3"));
+	shootAnimation.frames.push_back(getSpriteSheet()->getFrame("Shoot-4"));
+	shootAnimation.frames.push_back(getSpriteSheet()->getFrame("Shoot-5"));
+	setAnimation(shootAnimation);
 
 	Animation DieAnimation = Animation();
 	DieAnimation.name = "die";
