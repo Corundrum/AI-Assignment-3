@@ -514,6 +514,31 @@ bool CollisionManager::LOSCheck(Agent* agent, glm::vec2 end_point, const std::ve
 	return false;
 }
 
+bool CollisionManager::LOSCheck(Agent* agent, glm::vec2 end_point, const std::vector<DisplayObject*>& objects, SDL_Rect* target)
+{
+	const auto start_point = agent->getTransform()->position;
+
+	// Check collision with obstacles first.
+	for (auto object : objects)
+	{
+		auto objectOffset = glm::vec2(object->getWidth() * 0.5f, object->getHeight() * 0.5f);
+		if (lineRectCheck(start_point, end_point, object->getTransform()->position - objectOffset,
+			object->getWidth(), object->getHeight()))
+		{
+			return false;
+		}
+	}
+	// Now check if hitting target.
+	auto targetOffset = glm::vec2(target->w * 0.5f, target->h * 0.5f);
+	if (lineRectCheck(start_point, end_point, glm::vec2(target->x + target->w * 0.5, target->y + target->h * 0.5) - targetOffset,
+		target->w, target->h))
+	{
+		return true;
+	}
+	// Nothing hit.
+	return false;
+}
+
 void CollisionManager::rotateAABB(GameObject* object1, const float angle)
 {
 	// create an array of vec2s using right winding order (TL, TR, BR, BL)

@@ -1,6 +1,8 @@
 #include "PlayScene.h"
 #include "Game.h"
 #include "EventManager.h"
+#include <sstream>
+#include <iomanip>
 
 // required for IMGUI
 #include "imgui.h"
@@ -23,22 +25,36 @@ void PlayScene::draw()
 		i.second->draw();
 	}
 
+	for (auto enemy : BaseEnemy::s_EnemiesObj)
+	{
+		enemy->draw();
+	}
+
+	Util::DrawFilledRect(glm::vec2(0, 0), 800, 50, glm::vec4(0, 0, 0, 1));
+
 	drawDisplayList();
 
 	float health_percent = playerHealth / 100.0;
 
-	Util::DrawRect(glm::vec2(15, 15), 202, 40, glm::vec4(1, 1, 1, 1));
-	Util::DrawFilledRect(glm::vec2(16, 16), 200, 38, glm::vec4(0,0,0,1));
-	Util::DrawFilledRect(glm::vec2(16, 16), 200 * health_percent, 38, glm::vec4(1, 0.2, 0.2, 1));
+	Util::DrawRect(glm::vec2(15, 13), 202, 26, glm::vec4(1, 1, 1, 1));
+	Util::DrawFilledRect(glm::vec2(16, 14), 200, 24, glm::vec4(0,0,0,1));
+	Util::DrawFilledRect(glm::vec2(16, 14), 200 * health_percent, 24, glm::vec4(1, 0.2, 0.2, 1));
 
+	
+	std::stringstream stream;
+	stream << std::fixed << std::setprecision(1) << "Score: " << Player::s_pPlayerObj->getScore();
+	const std::string total_score = stream.str();
+	m_score->setText(total_score);
+	
 
-	SDL_SetRenderDrawColor(Renderer::Instance().getRenderer(), 25, 25, 25, 255);
 }
 
 void PlayScene::update()
 {
 	updateDisplayList();
 	
+
+
 	for (auto const& i : m_tiles)
 	{
 		i.second->update();
@@ -47,6 +63,7 @@ void PlayScene::update()
 	//LOS Checks for Enemies to player
 	for (auto enemy : BaseEnemy::s_EnemiesObj)
 	{
+		enemy->update();
 		enemy->getTree()->getLOSNode()->setLOS(enemy->checkAgentLOSToTarget(enemy, Player::s_pPlayerObj, m_pObstacles));
 	}
 
@@ -54,10 +71,28 @@ void PlayScene::update()
 	switch (m_LOSMode)
 	{
 	case 0:
-		m_checkAllNodesWithTarget(BaseEnemy::s_EnemiesObj.back());
+		for (auto enemy : BaseEnemy::s_EnemiesObj)
+		{
+			m_checkAllNodesWithTarget(enemy);
+		}
 		break;
 	}
 	
+
+	for (unsigned i = 0; i < BaseEnemy::s_EnemiesObj.size(); i++)
+	{
+
+		if (BaseEnemy::s_EnemiesObj[i]->getActionState() == DEATH && BaseEnemy::s_EnemiesObj[i]->getAnimation("die").current_frame == 2)
+		{
+			delete BaseEnemy::s_EnemiesObj[i];
+			BaseEnemy::s_EnemiesObj[i] = nullptr;
+			BaseEnemy::s_EnemiesObj.erase(BaseEnemy::s_EnemiesObj.begin() + i);
+			BaseEnemy::s_EnemiesObj.shrink_to_fit();
+			break;
+		}
+	}
+
+
 	//ALL COLLISION
 
 	for (auto obstacle : m_pObstacles)
@@ -266,6 +301,8 @@ void PlayScene::start()
 {
 	m_guiTitle = "Play Scene";
 
+	m_score = new Label("Score: 0", "Consolas", 24, SDL_Color{255, 255, 255}, glm::vec2(725, 25));
+	addChild(m_score);
 
 	SoundManager::Instance().load("../Assets/audio/FallenLeaves.mp3", "fallen_leaves", SOUND_MUSIC);
 	SoundManager::Instance().setMusicVolume(16);
@@ -277,7 +314,15 @@ void PlayScene::start()
 
 	BaseEnemy::s_EnemiesObj.push_back(new CloseCombatEnemy());
 	BaseEnemy::s_EnemiesObj.back()->getTransform()->position = glm::vec2(720, 40);
-	addChild(BaseEnemy::s_EnemiesObj.back());
+	//addChild(BaseEnemy::s_EnemiesObj.back());
+
+	BaseEnemy::s_EnemiesObj.push_back(new CloseCombatEnemy());
+	BaseEnemy::s_EnemiesObj.back()->getTransform()->position = glm::vec2(620, 500);
+	//addChild(BaseEnemy::s_EnemiesObj.back());
+
+	BaseEnemy::s_EnemiesObj.push_back(new CloseCombatEnemy());
+	BaseEnemy::s_EnemiesObj.back()->getTransform()->position = glm::vec2(100, 200);
+	//addChild(BaseEnemy::s_EnemiesObj.back());
 
 	Player::s_pPlayerObj = new Player();
 	Player::s_pPlayerObj->getTransform()->position = glm::vec2(120, 300);
@@ -307,7 +352,7 @@ void PlayScene::start()
 	m_buildGrid();
 	m_toggleGrid(m_isGridEnabled);
 
-	m_pathNodeLOSDistance = 250;
+	m_pathNodeLOSDistance = 150;
 	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));

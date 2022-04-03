@@ -107,7 +107,6 @@ void Player::draw()
 			m_pBullets.push_back(new Bullet());
 			m_pBullets.back()->getTransform()->position = glm::vec2(hitBox.x + hitBox.w * 0.5, hitBox.y + hitBox.h * 0.5);
 			m_pBullets.back()->getRigidBody()->velocity = (Util::normalize(EventManager::Instance().getMousePosition() - glm::vec2(hitBox.x + hitBox.w * 0.5, hitBox.y + hitBox.h * 0.5))) * 3.0f;
-			getParent()->addChild(m_pBullets.back());
 
 			getAnimation("shoot").current_frame = 0;
 			m_currentAnimationState = PLAYER_IDLE;
@@ -116,12 +115,22 @@ void Player::draw()
 		break;
 	}
 	
-	Util::DrawRect(glm::vec2(hitBox.x, hitBox.y), hitBox.w, hitBox.h, glm::vec4(1, 0, 0, 1));
+	for (auto bullet : m_pBullets)
+	{
+		bullet->draw();
+	}
+
+	//Util::DrawRect(glm::vec2(hitBox.x, hitBox.y), hitBox.w, hitBox.h, glm::vec4(1, 0, 0, 1));
 
 }
 
 void Player::update()
 {
+	for (auto bullet : m_pBullets)
+	{
+		bullet->update();
+	}
+
 	// checks
 	hitBox = { (int)getTransform()->position.x + 5, (int)getTransform()->position.y + 20, getWidth() / 2 - 10, getHeight() / 2 - 5};
 
@@ -132,10 +141,10 @@ void Player::update()
 			if (CollisionManager::AABBCheck(m_pBullets[i], &enemy->getHitBox()))
 			{
 				enemy->setHealth(enemy->getHealth() - 1);
-				getParent()->removeChild(m_pBullets[i]);
 				m_pBullets[i] = nullptr;
 				m_pBullets.erase(m_pBullets.begin() + i);
 				m_pBullets.shrink_to_fit();
+				break;
 			}
 		}
 	}
@@ -280,6 +289,11 @@ void Player::Shoot()
 			mouseRight = false;
 		}
 	}
+}
+
+void Player::addScore(int score)
+{
+	m_score += score;
 }
 
 void Player::setAnimationState(const PlayerAnimationState new_state)

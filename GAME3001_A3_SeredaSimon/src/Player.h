@@ -22,6 +22,9 @@ public:
 	void SwordSlash();
 	void Shoot();
 
+	void addScore(int score);
+	int getScore() { return m_score; }
+
 	SDL_Rect getHitBox() { return hitBox; }
 
 	// setters
@@ -29,6 +32,8 @@ public:
 
 private:
 	void m_buildAnimations();
+
+	int m_score = 0;
 
 	std::vector<Bullet*> m_pBullets;
 

@@ -160,7 +160,7 @@ bool Agent::checkAgentLOSToTarget(Agent * agent, DisplayObject * target_obstacle
 {
 	bool hasLOS = false;
 
-	auto targetDirection = target_obstacle->getTransform()->position - agent->getTransform()->position;
+	auto targetDirection = glm::vec2(target_obstacle->getTransform()->position.x + 24, target_obstacle->getTransform()->position.y + 32) - agent->getTransform()->position;
 	auto normalizedDirection = Util::normalize(targetDirection);
 	setMiddleLOSEndPoint(getTransform()->position + normalizedDirection * getLOSDistance());
 
@@ -178,6 +178,33 @@ bool Agent::checkAgentLOSToTarget(Agent * agent, DisplayObject * target_obstacle
 			contactList.push_back(obstacle);
 		}
 		hasLOS = CollisionManager::LOSCheck(agent, getMiddleLOSEndPoint(), contactList, target_obstacle);
+	}
+	agent->setHasLOS(hasLOS);
+	return hasLOS;
+}
+
+bool Agent::checkAgentLOSToTarget(Agent* agent, SDL_Rect* target_object, std::vector<Obstacle*>& obstacles)
+{
+	bool hasLOS = false;
+
+	auto targetDirection = glm::vec2(target_object->x + target_object->w / 2, target_object->y + target_object->h / 2) - agent->getTransform()->position;
+	auto normalizedDirection = Util::normalize(targetDirection);
+	setMiddleLOSEndPoint(getTransform()->position + normalizedDirection * getLOSDistance());
+
+	// if ship to target distance is less than or equal to LOS Distance
+	auto AgentToTargetDistance = Util::getClosestEdge(agent->getTransform()->position, target_object);
+	if (AgentToTargetDistance <= agent->getLOSDistance())
+	{
+		std::vector<DisplayObject*> contactList;
+		for (auto obstacle : obstacles)
+		{
+			if (obstacle->getType() == NONE) continue; // Added Lab 7.
+			auto AgentToObjectDistance = Util::getClosestEdge(agent->getTransform()->position, obstacle);
+			if (AgentToObjectDistance > AgentToTargetDistance) continue;
+
+			contactList.push_back(obstacle);
+		}
+		hasLOS = CollisionManager::LOSCheck(agent, getMiddleLOSEndPoint(), contactList, target_object);
 	}
 	agent->setHasLOS(hasLOS);
 	return hasLOS;

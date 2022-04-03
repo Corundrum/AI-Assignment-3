@@ -67,6 +67,7 @@ public:
 	//New Utilty
 
 	bool checkAgentLOSToTarget(Agent* agent, DisplayObject* target_object, std::vector<Obstacle*>& obstacles);
+	bool checkAgentLOSToTarget(Agent* agent, SDL_Rect* target_object, std::vector<Obstacle*>& obstacles);
 
 	//Sprite Settings
 	// getters

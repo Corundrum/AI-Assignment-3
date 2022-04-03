@@ -68,6 +68,7 @@ public:
 	static void DrawCapsule(glm::vec2 position, int width, int height, glm::vec4 colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), SDL_Renderer* renderer = Renderer::Instance().getRenderer());
 
 	static float getClosestEdge(glm::vec2 vecA, GameObject* object);
+	static float getClosestEdge(glm::vec2 vecA, SDL_Rect* object);
 };
 
 

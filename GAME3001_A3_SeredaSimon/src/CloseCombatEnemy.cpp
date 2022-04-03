@@ -43,7 +43,7 @@ CloseCombatEnemy::CloseCombatEnemy()
 	m_maxSpeed = 10.0f; // a maximum number of pixels moved per frame
 	m_turnRate = 5.0f; // a maximum number of degrees to turn each time-step
 	m_accelerationRate = 2.0f; // a maximum number of pixels to add to the velocity each frame
-	
+
 	hitBox = { (int)getTransform()->position.x - getWidth() / 2, (int)(getTransform()->position.y + getHeight() * 0.25), getWidth(), getHeight() / 2 };
 
 	setLOSDistance(400.0f); // 5 ppf x 80 feet
@@ -53,10 +53,14 @@ CloseCombatEnemy::CloseCombatEnemy()
 	setActionState(NO_ACTION);
 
 	//set patrol
-	m_patrol.push_back(glm::vec2(760, 40)); // top right
-	m_patrol.push_back(glm::vec2(760, 560));// bot right
-	m_patrol.push_back(glm::vec2(40, 560)); // bot left
-	m_patrol.push_back(glm::vec2(40, 40)); // top left
+	m_patrol.push_back(glm::vec2(760, 50)); 
+	m_patrol.push_back(glm::vec2(760, 150));
+	m_patrol.push_back(glm::vec2(300, 150)); 
+	m_patrol.push_back(glm::vec2(300, 550));
+	m_patrol.push_back(glm::vec2(600, 450));
+	m_patrol.push_back(glm::vec2(300, 550));
+	m_patrol.push_back(glm::vec2(300, 150));
+	m_patrol.push_back(glm::vec2(760, 150));
 	m_waypoint = 0;
 
 	setTargetPosition(m_patrol[m_waypoint]);
@@ -152,7 +156,7 @@ void CloseCombatEnemy::draw()
 		Util::DrawLine(getTransform()->position, getMiddleLOSEndPoint(), getLOSColour());
 	}
 
-	Util::DrawRect(glm::vec2(hitBox.x, hitBox.y), hitBox.w, hitBox.h, glm::vec4(1, 0, 0, 1));
+	//Util::DrawRect(glm::vec2(hitBox.x, hitBox.y), hitBox.w, hitBox.h, glm::vec4(1, 0, 0, 1));
 
 
 	drawHealthBar();
@@ -262,6 +266,7 @@ void CloseCombatEnemy::death()
 		//initialize the action
 		setActionState(DEATH);
 		SoundManager::Instance().playSound("death");
+		Player::s_pPlayerObj->addScore(10);
 	}
 }
 

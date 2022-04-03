@@ -540,3 +540,23 @@ float Util::getClosestEdge(glm::vec2 vecA, GameObject * object)
 	}
 	return dist;
 }
+
+float Util::getClosestEdge(glm::vec2 vecA, SDL_Rect* object)
+{
+	auto targOffset = glm::vec2(object->w * 0.5f, object->h * 0.5f);
+	auto targTopLeft = glm::vec2(object->x + object->w / 2, object->y + object->h / 2 ) - targOffset;
+	SDL_Rect rect = { (int)targTopLeft.x, (int)targTopLeft.y, object->w, object->h };
+
+	glm::vec2 sides[4] = { { rect.x + rect.w / 2, rect.y }, // top
+						   { rect.x + rect.w / 2, rect.y + rect.h }, // bottom
+						   { rect.x, rect.y + rect.h / 2 }, // left
+						   { rect.x + rect.w, rect.y + rect.h / 2 } }; // right
+	float dist = Util::distance(vecA, sides[0]);
+	for (int i = 1; i < 4; i++)
+	{
+		float distNew = Util::distance(vecA, sides[i]);
+		if (distNew < dist)
+			dist = distNew;
+	}
+	return dist;
+}

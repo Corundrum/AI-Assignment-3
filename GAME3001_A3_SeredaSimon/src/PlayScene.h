@@ -8,6 +8,7 @@
 #include "Target.h"
 #include "PathNode.h"
 #include "Obstacle.h"
+#include "Label.h"
 
 #include "Tile.h"
 #include "TileObjects.h"
@@ -31,6 +32,8 @@ private:
 	// IMGUI Function
 	void GUI_Function();
 	std::string m_guiTitle;
+
+	Label* m_score;
 
 	bool m_isGridEnabled;
 	
