@@ -55,7 +55,7 @@ void PlayScene::update()
 	switch (m_LOSMode)
 	{
 	case 0:
-		m_checkAllNodesWithTarget(m_pPlayer);
+		m_checkAllNodesWithTarget(m_pMeleeEnemies.back());
 		break;
 	}
 }
@@ -138,7 +138,7 @@ void PlayScene::start()
 
 	m_LOSMode = 0;
 	m_obstacleBuffer = 0;
-	m_pathNodeLOSDistance = 1000;
+	m_pathNodeLOSDistance = 250;
 	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 
 	m_isGridEnabled = false;

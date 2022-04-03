@@ -72,12 +72,12 @@ void Player::update()
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_W))
 	{
 		setAnimationState(PLAYER_RUN);
-		getTransform()->position.y -= 5;
+		getTransform()->position.y -= 4;
 	}
 	else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_S))
 	{
 		setAnimationState(PLAYER_RUN);
-		getTransform()->position.y += 5;
+		getTransform()->position.y += 4;
 	}
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_A))
 	{
@@ -86,7 +86,7 @@ void Player::update()
 			isFacingLeft = true;
 		}
 		setAnimationState(PLAYER_RUN);
-		getTransform()->position.x -= 5;
+		getTransform()->position.x -= 4;
 	}
 	else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_D))
 	{
@@ -95,7 +95,7 @@ void Player::update()
 			isFacingLeft = false;
 		}
 		setAnimationState(PLAYER_RUN);
-		getTransform()->position.x += 5;
+		getTransform()->position.x += 4;
 	}
 
 }

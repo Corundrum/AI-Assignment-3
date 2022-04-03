@@ -195,6 +195,9 @@
     <ClCompile Include="..\src\Tile.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\BaseEnemy.cpp">
+      <Filter>Decisions\Agents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -400,6 +403,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Tile.h">
       <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BaseEnemy.h">
+      <Filter>Decisions\Agents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
