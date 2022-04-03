@@ -3,6 +3,7 @@
 #include "EventManager.h"
 #include "Util.h"
 #include "BaseEnemy.h"
+#include "SoundManager.h"
 
 Player::Player(): m_currentAnimationState(PLAYER_IDLE)
 {
@@ -10,6 +11,9 @@ Player::Player(): m_currentAnimationState(PLAYER_IDLE)
 		"../Assets/sprites/PlayerSpriteData.txt",
 		"../Assets/sprites/player.png", 
 		"playerSpriteSheet");
+
+	SoundManager::Instance().load("../Assets/audio/swordSwing.wav", "sword_swing", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/Splat.wav", "splat", SOUND_SFX);
 
 	setSpriteSheet(TextureManager::Instance().getSpriteSheet("playerSpriteSheet"));
 	
@@ -144,12 +148,12 @@ void Player::Attack()
 			if (EventManager::Instance().getMousePosition().x > getTransform()->position.x)
 			{
 				isFacingLeft = false;
-				SwordSlash();
 			}
 			else
 			{
 				isFacingLeft = true;
 			}
+			SwordSlash();
 			mouseLeft = true;
 			m_currentAnimationState = PLAYER_COMBAT;
 		}
@@ -168,20 +172,22 @@ void Player::SwordSlash()
 	int dir;
 	if (!isFacingLeft)
 	{
-		dir = 64;
+		dir = 0;
 	}
 	else
 	{
-		dir = -64;
+		dir = -29;
 	}
 
-	SDL_Rect SwordHitBox = { hitBox.x + hitBox.w * 0.5, hitBox.y - 24, dir, 128 };
+	SDL_Rect SwordHitBox = { hitBox.x + dir, hitBox.y - 6, 64, 60 };
+	SoundManager::Instance().playSound("sword_swing");
 
 	for (auto enemy : BaseEnemy::s_EnemiesObj)
 	{
 		if (SDL_HasIntersection(&SwordHitBox, &enemy->getHitBox()))
 		{
 			enemy->setHealth(enemy->getHealth() - 3);
+			SoundManager::Instance().playSound("splat");
 		}
 	}
 

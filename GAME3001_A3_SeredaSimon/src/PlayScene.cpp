@@ -301,12 +301,13 @@ void PlayScene::start()
 
 	m_LOSMode = 0;
 	m_obstacleBuffer = -5;
-	m_pathNodeLOSDistance = 250;
-	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 
 	m_isGridEnabled = false;
 	m_buildGrid();
 	m_toggleGrid(m_isGridEnabled);
+
+	m_pathNodeLOSDistance = 250;
+	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 
 	ImGuiWindowFrame::Instance().setGUIFunction(std::bind(&PlayScene::GUI_Function, this));
 }
