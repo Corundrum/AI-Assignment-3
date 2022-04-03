@@ -407,6 +407,9 @@
     <ClInclude Include="..\src\BaseEnemy.h">
       <Filter>Decisions\Agents</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\EnemyAnimationState.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md">

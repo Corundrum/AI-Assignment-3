@@ -45,11 +45,11 @@ void PlayScene::update()
 
 	for (auto enemy : m_pMeleeEnemies)
 	{
-		enemy->getTree()->getLOSNode()->setLOS(enemy->checkAgentLOSToTarget(enemy, m_pPlayer, m_pObstacles));
+		enemy->getTree()->getLOSNode()->setLOS(enemy->checkAgentLOSToTarget(enemy, Player::s_pPlayerObj, m_pObstacles));
 	}
 	for (auto enemy : m_pRangedEnemies)
 	{
-		enemy->getTree()->getLOSNode()->setLOS(enemy->checkAgentLOSToTarget(enemy, m_pPlayer, m_pObstacles));
+		enemy->getTree()->getLOSNode()->setLOS(enemy->checkAgentLOSToTarget(enemy, Player::s_pPlayerObj, m_pObstacles));
 	}
 
 	switch (m_LOSMode)
@@ -132,9 +132,9 @@ void PlayScene::start()
 	m_pRangedEnemies.back()->getTransform()->position = glm::vec2(350, 40);
 	addChild(m_pRangedEnemies.back());
 
-	m_pPlayer = new Player();
-	m_pPlayer->getTransform()->position = glm::vec2(150, 400);
-	addChild(m_pPlayer, 2);
+	Player::s_pPlayerObj = new Player();
+	Player::s_pPlayerObj->getTransform()->position = glm::vec2(150, 400);
+	addChild(Player::s_pPlayerObj, 2);
 
 	m_LOSMode = 0;
 	m_obstacleBuffer = 0;
@@ -288,3 +288,5 @@ void PlayScene::GUI_Function()
 	}
 	ImGui::End();
 }
+
+Player* Player::s_pPlayerObj;

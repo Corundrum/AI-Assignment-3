@@ -189,3 +189,31 @@ void Agent::m_changeDirection()
 	const auto y = sin(m_currentHeading * Util::Deg2Rad);
 	m_currentDirection = glm::vec2(x, y);
 }
+
+SpriteSheet* Agent::getSpriteSheet()
+{
+	return m_pSpriteSheet;
+}
+
+Animation& Agent::getAnimation(const std::string& name)
+{
+	return m_pAnimations[name];
+}
+
+void Agent::setSpriteSheet(SpriteSheet* sprite_sheet)
+{
+	m_pSpriteSheet = sprite_sheet;
+}
+
+void Agent::setAnimation(const Animation& animation)
+{
+	if (!m_animationExists(animation.name))
+	{
+		m_pAnimations[animation.name] = animation;
+	}
+}
+
+bool Agent::m_animationExists(const std::string& id)
+{
+	return m_pAnimations.find(id) != m_pAnimations.end();
+}

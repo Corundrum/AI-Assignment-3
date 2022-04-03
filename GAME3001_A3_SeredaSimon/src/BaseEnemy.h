@@ -39,6 +39,7 @@ public:
 
 	//new action functions
 	void patrol() override;
+	void moveToPlayer() override;
 
 	const DecisionTree* getTree();
 	bool debug = 0;

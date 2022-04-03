@@ -33,8 +33,6 @@ private:
 	std::string m_guiTitle;
 
 	bool m_isGridEnabled;
-	
-	Player* m_pPlayer;
 
 	std::vector<CloseCombatEnemy*> m_pMeleeEnemies;
 	std::vector<RangedCombatEnemy*> m_pRangedEnemies;

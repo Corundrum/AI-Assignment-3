@@ -142,6 +142,16 @@ void BaseEnemy::patrol()
 	m_move();
 }
 
+void BaseEnemy::moveToPlayer()
+{
+	if (getActionState() != MOVE_TO_PLAYER)
+	{
+		//initialize the action
+		setActionState(MOVE_TO_PLAYER);
+	}
+	//m_move();
+}
+
 const DecisionTree* BaseEnemy::getTree()
 {
 	return m_tree;

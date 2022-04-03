@@ -6,6 +6,9 @@
 #include "NavigationObject.h"
 #include "ActionState.h"
 #include "Obstacle.h"
+#include "Animation.h"
+#include <unordered_map>
+#include "SpriteSheet.h"
 
 class Agent : public NavigationObject
 {
@@ -63,6 +66,16 @@ public:
 
 	bool checkAgentLOSToTarget(Agent* agent, DisplayObject* target_object, std::vector<Obstacle*>& obstacles);
 
+	//Sprite Settings
+	// getters
+	SpriteSheet* getSpriteSheet();
+	Animation& getAnimation(const std::string& name);
+
+	// setters
+	void setSpriteSheet(SpriteSheet* sprite_sheet);
+	void setAnimation(const Animation& animation);
+
+
 private:
 	void m_changeDirection();
 	float m_currentHeading; // angle the ship is looking
@@ -87,6 +100,14 @@ private:
 
 	// action state
 	ActionState m_state;
+
+	//Sprite Settings
+	// private utility functions
+	bool m_animationExists(const std::string& id);
+
+	SpriteSheet* m_pSpriteSheet;
+
+	std::unordered_map<std::string, Animation> m_pAnimations;
 };
 
 

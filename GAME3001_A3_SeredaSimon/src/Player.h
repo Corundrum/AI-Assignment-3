@@ -10,6 +10,7 @@ class Player final : public Sprite
 public:
 	Player();
 	~Player();
+	static Player* s_pPlayerObj;
 
 	// Life Cycle Methods
 	virtual void draw() override;

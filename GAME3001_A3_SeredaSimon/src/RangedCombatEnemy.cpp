@@ -67,13 +67,3 @@ void RangedCombatEnemy::update()
 void RangedCombatEnemy::clean()
 {
 }
-
-void RangedCombatEnemy::moveToRange()
-{
-	if (getActionState() != MOVE_TO_RANGE)
-	{
-		//initialize the action
-		setActionState(MOVE_TO_RANGE);
-	}
-	//m_move();
-}

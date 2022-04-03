@@ -4,6 +4,8 @@
 
 #include "BaseEnemy.h"
 #include "DecisionTree.h"
+#include "Sprite.h"
+#include "EnemyAnimationState.h"
 
 class CloseCombatEnemy final : public BaseEnemy
 {
@@ -17,11 +19,12 @@ public:
 	virtual void clean() override;
 
 	//new action functions
-	void moveToPlayer() override;
 	
 private:
 	// private movement variables
-
+	void m_buildAnimations();
+	bool isFacingLeft = 0;
+	EnemyAnimationState m_currentAnimationState;
 };
 
 
