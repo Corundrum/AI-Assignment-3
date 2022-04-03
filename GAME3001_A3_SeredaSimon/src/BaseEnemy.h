@@ -10,6 +10,7 @@ class BaseEnemy : public Agent
 public:
 	BaseEnemy();
 	~BaseEnemy();
+	static std::vector<BaseEnemy*> s_EnemiesObj;
 
 	// Inherited via GameObject
 	void draw() override = 0;

@@ -45,7 +45,7 @@ void PlayScene::update()
 	}
 
 	//LOS Checks for Enemies to player
-	for (auto enemy : m_pEnemies)
+	for (auto enemy : BaseEnemy::s_EnemiesObj)
 	{
 		enemy->getTree()->getLOSNode()->setLOS(enemy->checkAgentLOSToTarget(enemy, Player::s_pPlayerObj, m_pObstacles));
 	}
@@ -54,7 +54,7 @@ void PlayScene::update()
 	switch (m_LOSMode)
 	{
 	case 0:
-		m_checkAllNodesWithTarget(m_pEnemies.back());
+		m_checkAllNodesWithTarget(BaseEnemy::s_EnemiesObj.back());
 		break;
 	}
 	
@@ -97,7 +97,7 @@ void PlayScene::update()
 				Player::s_pPlayerObj->getTransform()->position.y -= 2.5;
 			}
 		}
-		for (auto enemy : m_pEnemies)
+		for (auto enemy : BaseEnemy::s_EnemiesObj)
 		{
 			hitbox = enemy->getHitBox();
 			top = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y);
@@ -175,7 +175,7 @@ void PlayScene::update()
 			}
 
 		}
-		for (auto enemy : m_pEnemies)
+		for (auto enemy : BaseEnemy::s_EnemiesObj)
 		{
 			hitbox = enemy->getHitBox();
 			top = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y);
@@ -243,7 +243,7 @@ void PlayScene::handleEvents()
 		{
 			m_isGridEnabled = false;
 			m_toggleGrid(false);
-			for (auto enemy : m_pEnemies)
+			for (auto enemy : BaseEnemy::s_EnemiesObj)
 			{
 				enemy->debug = 0;
 			}
@@ -252,7 +252,7 @@ void PlayScene::handleEvents()
 		{
 			m_isGridEnabled = true;
 			m_toggleGrid(true);
-			for (auto enemy : m_pEnemies)
+			for (auto enemy : BaseEnemy::s_EnemiesObj)
 			{
 				enemy->debug = 1;
 			}
@@ -275,9 +275,9 @@ void PlayScene::start()
 	m_tiles.push_back(std::pair<std::string, TileObject*>("ground", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer1.txt", "woodsTiles")));
 	m_tiles.push_back(std::pair<std::string, TileObject*>("objects", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer2.txt", "woodsTiles")));
 
-	m_pEnemies.push_back(new CloseCombatEnemy());
-	m_pEnemies.back()->getTransform()->position = glm::vec2(720, 40);
-	addChild(m_pEnemies.back());
+	BaseEnemy::s_EnemiesObj.push_back(new CloseCombatEnemy());
+	BaseEnemy::s_EnemiesObj.back()->getTransform()->position = glm::vec2(720, 40);
+	addChild(BaseEnemy::s_EnemiesObj.back());
 
 	Player::s_pPlayerObj = new Player();
 	Player::s_pPlayerObj->getTransform()->position = glm::vec2(120, 300);
@@ -465,3 +465,4 @@ void PlayScene::GUI_Function()
 }
 
 Player* Player::s_pPlayerObj;
+std::vector<BaseEnemy*> BaseEnemy::s_EnemiesObj;

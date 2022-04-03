@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include "EventManager.h"
 #include "Util.h"
+#include "BaseEnemy.h"
 
 Player::Player(): m_currentAnimationState(PLAYER_IDLE)
 {
@@ -143,6 +144,7 @@ void Player::Attack()
 			if (EventManager::Instance().getMousePosition().x > getTransform()->position.x)
 			{
 				isFacingLeft = false;
+				SwordSlash();
 			}
 			else
 			{
@@ -163,6 +165,27 @@ void Player::Attack()
 
 void Player::SwordSlash()
 {
+	int dir;
+	if (!isFacingLeft)
+	{
+		dir = 64;
+	}
+	else
+	{
+		dir = -64;
+	}
+
+	SDL_Rect SwordHitBox = { hitBox.x + hitBox.w * 0.5, hitBox.y - 24, dir, 128 };
+
+	for (auto enemy : BaseEnemy::s_EnemiesObj)
+	{
+		if (SDL_HasIntersection(&SwordHitBox, &enemy->getHitBox()))
+		{
+			enemy->setHealth(enemy->getHealth() - 3);
+		}
+	}
+
+
 }
 
 void Player::Shoot()

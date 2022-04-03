@@ -33,8 +33,6 @@ private:
 	std::string m_guiTitle;
 
 	bool m_isGridEnabled;
-
-	std::vector<BaseEnemy*> m_pEnemies;
 	
 	std::vector<Obstacle*> m_pObstacles;
 
