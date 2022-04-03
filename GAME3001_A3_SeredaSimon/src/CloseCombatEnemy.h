@@ -19,8 +19,12 @@ public:
 	virtual void clean() override;
 
 	//new action functions
-	
+	void patrol() override;
+	void moveToPlayer() override;
 private:
+	bool isWithinRadius = 0;
+	bool hasLOS = 0;
+
 	// private movement variables
 	void m_buildAnimations();
 	bool isFacingLeft = 0;

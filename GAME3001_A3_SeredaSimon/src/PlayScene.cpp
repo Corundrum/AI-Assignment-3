@@ -115,10 +115,6 @@ void PlayScene::start()
 	m_pEnemies.back()->getTransform()->position = glm::vec2(400, 40);
 	addChild(m_pEnemies.back());
 
-	m_pEnemies.push_back(new RangedCombatEnemy());
-	m_pEnemies.back()->getTransform()->position = glm::vec2(350, 40);
-	addChild(m_pEnemies.back());
-
 	Player::s_pPlayerObj = new Player();
 	Player::s_pPlayerObj->getTransform()->position = glm::vec2(150, 400);
 	addChild(Player::s_pPlayerObj, 2);

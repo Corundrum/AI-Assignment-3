@@ -12,23 +12,6 @@
 
 BaseEnemy::BaseEnemy()
 {
-	// Fill in action state and patrol code
-	setActionState(NO_ACTION);
-
-	//set patrol
-	m_patrol.push_back(glm::vec2(760, 40)); // top right
-	m_patrol.push_back(glm::vec2(760, 560));// bot right
-	m_patrol.push_back(glm::vec2(40, 560)); // bot left
-	m_patrol.push_back(glm::vec2(40, 40)); // top left
-	m_waypoint = 0;
-
-	setTargetPosition(m_patrol[m_waypoint]);
-	setType(AGENT);
-
-	//create decision tree
-	m_tree = new DecisionTree(this); // overloaded constructor
-	m_buildTree();
-	m_tree->display();
 }
 
 BaseEnemy::~BaseEnemy()
@@ -128,26 +111,6 @@ void BaseEnemy::LookWhereYoureGoing(const glm::vec2 target_direction)
 	}
 
 	updateWhiskers(getWhiskerAngle());
-}
-
-void BaseEnemy::patrol()
-{
-	if (getActionState() != PATROL)
-	{
-		//initialize the action
-		setActionState(PATROL);
-	}
-	m_move();
-}
-
-void BaseEnemy::moveToPlayer()
-{
-	if (getActionState() != MOVE_TO_PLAYER)
-	{
-		//initialize the action
-		setActionState(MOVE_TO_PLAYER);
-	}
-	//m_move();
 }
 
 const DecisionTree* BaseEnemy::getTree()

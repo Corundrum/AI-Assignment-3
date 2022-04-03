@@ -132,17 +132,17 @@ void Player::m_buildAnimations()
 	setAnimation(runAnimation);
 
 	Animation AttackAnimation = Animation();
-	runAnimation.name = "attack";
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("Atk-0"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("Atk-1"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("Atk-2"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("Atk-3"));
+	AttackAnimation.name = "attack";
+	AttackAnimation.frames.push_back(getSpriteSheet()->getFrame("Atk-0"));
+	AttackAnimation.frames.push_back(getSpriteSheet()->getFrame("Atk-1"));
+	AttackAnimation.frames.push_back(getSpriteSheet()->getFrame("Atk-2"));
+	AttackAnimation.frames.push_back(getSpriteSheet()->getFrame("Atk-3"));
 	setAnimation(AttackAnimation);
 
 	Animation DieAnimation = Animation();
-	runAnimation.name = "attack";
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("Die-0"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("Die-1"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("Die-2"));
+	DieAnimation.name = "die";
+	DieAnimation.frames.push_back(getSpriteSheet()->getFrame("Die-0"));
+	DieAnimation.frames.push_back(getSpriteSheet()->getFrame("Die-1"));
+	DieAnimation.frames.push_back(getSpriteSheet()->getFrame("Die-2"));
 	setAnimation(DieAnimation);
 }

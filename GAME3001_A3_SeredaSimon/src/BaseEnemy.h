@@ -38,8 +38,7 @@ public:
 	void LookWhereYoureGoing(glm::vec2 target_direction);
 
 	//new action functions
-	void patrol() override;
-	void moveToPlayer() override;
+
 
 	const DecisionTree* getTree();
 	bool debug = 0;
