@@ -62,6 +62,7 @@ public:
 	virtual void moveToRange() {}
 	virtual void patrol() {}
 	virtual void idle() {}
+	virtual void death() {}
 
 	//New Utilty
 

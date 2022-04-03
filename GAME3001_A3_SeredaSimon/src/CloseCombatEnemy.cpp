@@ -10,6 +10,7 @@
 #include "MoveToPlayerAction.h"
 #include "PatrolAction.h"
 #include "IdleAction.h"
+#include "DeathAction.h"
 
 #include "Sprite.h"
 #include "Player.h"
@@ -75,6 +76,18 @@ void CloseCombatEnemy::draw()
 	
 	switch (getActionState())
 	{
+	case DEATH:
+		if (!isFacingLeft)
+		{
+			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("die"),
+				x, y, 0.08f, 0, 255, this, true);
+		}
+		else
+		{
+			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("die"),
+				x, y, 0.08f, 0, 255, this, true, SDL_FLIP_HORIZONTAL);
+		}
+		break;
 	case IDLE:
 		if (!isFacingLeft)
 		{
@@ -103,7 +116,7 @@ void CloseCombatEnemy::draw()
 		if (!isFacingLeft)
 		{
 			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("patrol"),
-				x, y, 0.10f, 0, 255, this, true);
+				x, y, 0.12f, 0, 255, this, true);
 		}
 		else
 		{
@@ -141,50 +154,62 @@ void CloseCombatEnemy::draw()
 
 void CloseCombatEnemy::update()
 {
-	if (EventManager::Instance().keyPressed(SDL_SCANCODE_P))
+	if (getActionState() != DEATH)
 	{
-		if (getActionState() != IDLE)
+		if (EventManager::Instance().keyPressed(SDL_SCANCODE_K))
 		{
-			m_tree->getIdleNode()->setWantsToIdle(1);
+			setHealth(getHealth() - 1);
+		}
+		if (EventManager::Instance().keyPressed(SDL_SCANCODE_P))
+		{
+			if (getActionState() != IDLE)
+			{
+				m_tree->getIdleNode()->setWantsToIdle(1);
+			}
+			else
+			{
+				m_tree->getIdleNode()->setWantsToIdle(0);
+			}
+		}
+
+		if (getRigidBody()->velocity.x > 0)
+		{
+			if (!isFacingLeft)
+			{
+				isFacingLeft = true;
+			}
+		}
+		else if (getRigidBody()->velocity.x < 0)
+		{
+			if (isFacingLeft)
+			{
+				isFacingLeft = false;
+			}
+		}
+
+		if (Util::distance(getTransform()->position, glm::vec2(Player::s_pPlayerObj->getTransform()->position.x + 24, Player::s_pPlayerObj->getTransform()->position.y + 24)) < 250)
+		{
+			if (!isWithinRadius)
+			{
+				isWithinRadius = true;
+			}
 		}
 		else
 		{
-			m_tree->getIdleNode()->setWantsToIdle(0);
+			if (isWithinRadius)
+			{
+				isWithinRadius = false;
+			}
 		}
-	}
-	
-	if (getRigidBody()->velocity.x > 0)
-	{
-		if (!isFacingLeft)
-		{
-			isFacingLeft = true;
-		}
-	}
-	else if (getRigidBody()->velocity.x < 0)
-	{
-		if (isFacingLeft)
-		{
-			isFacingLeft = false;
-		}
-	}
 
-	if (Util::distance(getTransform()->position, glm::vec2(Player::s_pPlayerObj->getTransform()->position.x + 24, Player::s_pPlayerObj->getTransform()->position.y + 24)) < 250)
-	{
-		if (!isWithinRadius)
+		if (getHealth() <= 0)
 		{
-			isWithinRadius = true;
+			m_tree->getDeathNode()->setIsDead(true);
 		}
-	}
-	else
-	{
-		if (isWithinRadius)
-		{
-			isWithinRadius = false;
-		}
-	}
 
-	// Determine which action to perform
-	m_tree->makeDecision();
+		// Determine which action to perform
+		m_tree->makeDecision();
+	}
 }
 
 void CloseCombatEnemy::clean()
@@ -198,6 +223,15 @@ void CloseCombatEnemy::idle()
 	{
 		//initialize the action
 		setActionState(IDLE);
+	}
+}
+
+void CloseCombatEnemy::death()
+{
+	if (getActionState() != DEATH)
+	{
+		//initialize the action
+		setActionState(DEATH);
 	}
 }
 

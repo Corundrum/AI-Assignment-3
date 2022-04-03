@@ -4,6 +4,7 @@
 #include "MoveToPlayerAction.h"
 #include "PatrolAction.h"
 #include "IdleAction.h"
+#include "DeathAction.h"
 #include <iostream>
 
 DecisionTree::DecisionTree()
@@ -32,6 +33,11 @@ IdleCondition* DecisionTree::getIdleNode() const
 	return m_idleNode;
 }
 
+DeathCondition* DecisionTree::getDeathNode() const
+{
+	return m_deathNode;
+}
+
 LOSCondition* DecisionTree::getLOSNode() const
 {
 	return m_LOSNode;
@@ -55,6 +61,11 @@ std::vector<TreeNode*>& DecisionTree::getTree()
 void DecisionTree::setIdleNode(IdleCondition* node)
 {
 	m_idleNode = node;
+}
+
+void DecisionTree::setDeathNode(DeathCondition* node)
+{
+	m_deathNode = node;
 }
 
 void DecisionTree::setLOSNode(LOSCondition* node)

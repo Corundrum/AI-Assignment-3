@@ -10,6 +10,7 @@
 #include "MoveToPlayerAction.h"
 #include "PatrolAction.h"
 #include "IdleAction.h"
+#include "DeathAction.h"
 
 BaseEnemy::BaseEnemy()
 {
@@ -153,7 +154,11 @@ void BaseEnemy::m_move()
 void BaseEnemy::m_buildTree()
 {
 	// Create and add root node.
+	m_tree->setDeathNode(new DeathCondition());
+	m_tree->getTree().push_back(m_tree->getDeathNode());
+
 	m_tree->setIdleNode(new IdleCondition());
+	m_tree->addNode(m_tree->getDeathNode(), m_tree->getIdleNode(), LEFT_TREE_NODE);
 	m_tree->getTree().push_back(m_tree->getIdleNode());
 
 	m_tree->setLOSNode(new LOSCondition());
@@ -167,6 +172,10 @@ void BaseEnemy::m_buildTree()
 	m_tree->setCloseCombatNode(new CloseCombatCondition());
 	m_tree->addNode(m_tree->getLOSNode(), m_tree->getCloseCombatNode(), RIGHT_TREE_NODE);
 	m_tree->getTree().push_back(m_tree->getCloseCombatNode());
+
+	TreeNode* deathNode = m_tree->addNode(m_tree->getDeathNode(), new DeathAction(), RIGHT_TREE_NODE);
+	dynamic_cast<ActionNode*>(deathNode)->setAgent(this);
+	m_tree->getTree().push_back(deathNode);
 
 	TreeNode* idleNode = m_tree->addNode(m_tree->getIdleNode(), new IdleAction(), RIGHT_TREE_NODE);
 	dynamic_cast<ActionNode*>(idleNode)->setAgent(this);
