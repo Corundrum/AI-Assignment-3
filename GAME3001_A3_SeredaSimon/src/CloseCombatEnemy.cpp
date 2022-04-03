@@ -95,27 +95,29 @@ void CloseCombatEnemy::draw()
 void CloseCombatEnemy::update()
 {
 
-	if (getCurrentDirection().x == 0 && getCurrentDirection().y == 0);
+	std::cout << getRigidBody()->velocity.x << " " << getRigidBody()->velocity.y << std::endl;
+
+	if (getRigidBody()->velocity.x == 0 && getRigidBody()->velocity.y == 0);
 	{
 		m_currentAnimationState = ENEMY_IDLE;
 	}
-	if (getCurrentDirection().x > 0)
+	if (getRigidBody()->velocity.x > 0)
 	{
 		m_currentAnimationState = ENEMY_RUN;
 		if (isFacingLeft)
 		{
-			isFacingLeft == false;
+			isFacingLeft = false;
 		}
 	}
-	else if (getCurrentDirection().x < 0)
+	else if (getRigidBody()->velocity.x < 0)
 	{
 		m_currentAnimationState = ENEMY_RUN;
 		if (!isFacingLeft)
 		{
-			isFacingLeft == true;
+			isFacingLeft = true;
 		}
 	}
-	else if (getCurrentDirection().y > 0 || getCurrentDirection().y < 0)
+	else if (getRigidBody()->velocity.y > 0 || getRigidBody()->velocity.y < 0)
 	{
 		m_currentAnimationState = ENEMY_RUN;
 	}

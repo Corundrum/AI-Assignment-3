@@ -34,8 +34,7 @@ private:
 
 	bool m_isGridEnabled;
 
-	std::vector<CloseCombatEnemy*> m_pMeleeEnemies;
-	std::vector<RangedCombatEnemy*> m_pRangedEnemies;
+	std::vector<BaseEnemy*> m_pEnemies;
 	
 	std::vector<Obstacle*> m_pObstacles;
 

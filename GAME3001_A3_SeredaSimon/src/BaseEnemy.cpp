@@ -34,8 +34,6 @@ BaseEnemy::BaseEnemy()
 BaseEnemy::~BaseEnemy()
 = default;
 
-
-
 float BaseEnemy::getMaxSpeed() const
 {
 	return m_maxSpeed;
@@ -80,8 +78,8 @@ void BaseEnemy::drawHealthBar()
 {
 	float health_percent = (float)getHealth() / getMaxHealth();
 
-	Util::DrawFilledRect(glm::vec2(getTransform()->position.x - (getWidth() / 2), getTransform()->position.y - (getHeight() / 2) - 8), 48, 8, glm::vec4(0, 0, 0, 1));
-	Util::DrawFilledRect(glm::vec2(getTransform()->position.x - (getWidth() / 2), getTransform()->position.y - (getHeight() / 2) - 8), 48 * health_percent, 8, glm::vec4(1, 0.2, 0.2, 1));
+	Util::DrawFilledRect(glm::vec2(getTransform()->position.x - getWidth(), getTransform()->position.y - (getHeight() / 2) - 8), 48, 8, glm::vec4(0, 0, 0, 1));
+	Util::DrawFilledRect(glm::vec2(getTransform()->position.x - getWidth(), getTransform()->position.y - (getHeight() / 2) - 8), 48 * health_percent, 8, glm::vec4(1, 0.2, 0.2, 1));
 }
 
 void BaseEnemy::Seek()
