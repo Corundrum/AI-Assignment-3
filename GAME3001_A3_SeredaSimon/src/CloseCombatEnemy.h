@@ -23,7 +23,6 @@ public:
 	void moveToPlayer() override;
 private:
 	bool isWithinRadius = 0;
-	bool hasLOS = 0;
 
 	// private movement variables
 	void m_buildAnimations();

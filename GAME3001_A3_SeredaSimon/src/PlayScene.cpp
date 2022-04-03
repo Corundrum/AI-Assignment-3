@@ -84,17 +84,6 @@ void PlayScene::handleEvents()
 		}
 	}
 
-	if (EventManager::Instance().keyPressed(SDL_SCANCODE_R))
-	{
-		m_pEnemies.push_back(new RangedCombatEnemy());
-		m_pEnemies.back()->getTransform()->position = glm::vec2(400, 40);
-		if (m_isGridEnabled)
-		{
-			m_pEnemies.back()->debug = 1;
-		}
-		addChild(m_pEnemies.back());
-	}
-
 	EventManager::Instance().update();
 }
 
@@ -105,7 +94,9 @@ void PlayScene::start()
 	//TODO: Background
 
 	TextureManager::Instance().load("../Assets/tiles/MysticWoodsTileMap.png", "woodsTiles");
-	m_tiles.push_back(std::pair<std::string, TileObject*>("level", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/level.txt", "woodsTiles")));
+	m_tiles.push_back(std::pair<std::string, TileObject*>("level", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer1.txt", "woodsTiles")));
+	m_tiles.push_back(std::pair<std::string, TileObject*>("level", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer2.txt", "woodsTiles")));
+
 
 	m_pObstacles.push_back(new Obstacle());
 	m_pObstacles.back()->getTransform()->position = glm::vec2(250, 500);
