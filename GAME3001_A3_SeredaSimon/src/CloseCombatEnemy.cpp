@@ -102,18 +102,26 @@ void CloseCombatEnemy::draw()
 		break;
 	}
 
+	glm::vec4 blue = glm::vec4(0, 0, 1, 1);
+	glm::vec4 green = glm::vec4(0, 1, 0, 1);
+	glm::vec4 circleColour;
 
 	// draw LOS
+	if (isWithinRadius)
+	{
+		circleColour = green;
+	}
+	else
+	{
+		circleColour = blue;
+	}
 	if (debug)
 	{
-	
+		Util::DrawCircle(getTransform()->position, 250, circleColour);
 		Util::DrawLine(getTransform()->position, getMiddleLOSEndPoint(), getLOSColour());
 	}
 
-	if (isWithinRadius)
-	{
-		Util::DrawCircle(getTransform()->position, 250, glm::vec4(0, 0, 1, 1));
-	}
+	
 
 	drawHealthBar();
 }
@@ -146,7 +154,7 @@ void CloseCombatEnemy::update()
 		m_currentAnimationState = ENEMY_RUN;
 	}
 
-	if (Util::distance(getTransform()->position, Player::s_pPlayerObj->getTransform()->position) < 250)
+	if (Util::distance(getTransform()->position, glm::vec2(Player::s_pPlayerObj->getTransform()->position.x + 24, Player::s_pPlayerObj->getTransform()->position.y + 24)) < 250)
 	{
 		if (!isWithinRadius)
 		{
