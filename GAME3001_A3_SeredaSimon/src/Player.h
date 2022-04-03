@@ -17,6 +17,10 @@ public:
 	virtual void update() override;
 	virtual void clean() override;
 
+	void Attack();
+	void SwordSlash();
+	void Shoot();
+
 	SDL_Rect getHitBox() { return hitBox; }
 
 	// setters
@@ -26,6 +30,8 @@ private:
 	void m_buildAnimations();
 
 	SDL_Rect hitBox;
+
+	bool mouseLeft;
 
 	bool isFacingLeft = 0;
 	PlayerAnimationState m_currentAnimationState;

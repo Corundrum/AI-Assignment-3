@@ -237,6 +237,8 @@ void CloseCombatEnemy::death()
 	{
 		//initialize the action
 		setActionState(DEATH);
+		getRigidBody()->acceleration = glm::vec2(0,0);
+		getRigidBody()->velocity = glm::vec2(0,0);
 	}
 }
 

@@ -63,6 +63,23 @@ void Player::draw()
 				x, y, 0.52f, 0, 255, this, true, SDL_FLIP_HORIZONTAL);
 		}
 		break;
+	case PLAYER_COMBAT:
+		if (!isFacingLeft)
+		{
+			TextureManager::Instance().playAnimation("playerSpriteSheet", getAnimation("attack"),
+				x, y, 0.3f, 0, 255, this, true);
+		}
+		else
+		{
+			TextureManager::Instance().playAnimation("playerSpriteSheet", getAnimation("attack"),
+				x, y, 0.3f, 0, 255, this, true, SDL_FLIP_HORIZONTAL);
+		}
+		if (getAnimation("attack").current_frame == 3)
+		{
+			getAnimation("attack").current_frame = 0;
+			m_currentAnimationState = PLAYER_IDLE;
+		}
+		break;
 	default:
 		break;
 	}
@@ -75,39 +92,80 @@ void Player::update()
 {
 	hitBox = { (int)getTransform()->position.x + 5, (int)getTransform()->position.y + 20, getWidth() / 2 - 10, getHeight() / 2 - 5};
 
-	setAnimationState(PLAYER_IDLE);
-	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_W))
+	if (m_currentAnimationState != PLAYER_COMBAT && m_currentAnimationState != PLAYER_SHOOT)
 	{
-		setAnimationState(PLAYER_RUN);
-		getTransform()->position.y -= 2.5;
-	}
-	else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_S))
-	{
-		setAnimationState(PLAYER_RUN);
-		getTransform()->position.y += 2.5;
-	}
-	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_A))
-	{
-		if (!isFacingLeft)
+		
+		setAnimationState(PLAYER_IDLE);
+		if (EventManager::Instance().isKeyDown(SDL_SCANCODE_W))
 		{
-			isFacingLeft = true;
+			setAnimationState(PLAYER_RUN);
+			getTransform()->position.y -= 2.5;
 		}
-		setAnimationState(PLAYER_RUN);
-		getTransform()->position.x -= 2.5;
-	}
-	else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_D))
-	{
-		if (isFacingLeft)
+		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_S))
 		{
-			isFacingLeft = false;
+			setAnimationState(PLAYER_RUN);
+			getTransform()->position.y += 2.5;
 		}
-		setAnimationState(PLAYER_RUN);
-		getTransform()->position.x += 2.5;
-	}
+		if (EventManager::Instance().isKeyDown(SDL_SCANCODE_A))
+		{
+			if (!isFacingLeft)
+			{
+				isFacingLeft = true;
+			}
+			setAnimationState(PLAYER_RUN);
+			getTransform()->position.x -= 2.5;
+		}
+		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_D))
+		{
+			if (isFacingLeft)
+			{
+				isFacingLeft = false;
+			}
+			setAnimationState(PLAYER_RUN);
+			getTransform()->position.x += 2.5;
+		}
 
+		Attack();
+
+	}
 }
 
 void Player::clean()
+{
+}
+
+void Player::Attack()
+{
+	if (EventManager::Instance().getMouseButton(LEFT))
+	{
+		if (!mouseLeft)
+		{
+			if (EventManager::Instance().getMousePosition().x > getTransform()->position.x)
+			{
+				isFacingLeft = false;
+			}
+			else
+			{
+				isFacingLeft = true;
+			}
+			mouseLeft = true;
+			m_currentAnimationState = PLAYER_COMBAT;
+		}
+	}
+	else
+	{
+		if (mouseLeft)
+		{
+			mouseLeft = false;
+		}
+	}
+}
+
+void Player::SwordSlash()
+{
+}
+
+void Player::Shoot()
 {
 }
 

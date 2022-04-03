@@ -6,6 +6,8 @@ enum PlayerAnimationState
 {
 	PLAYER_IDLE,
 	PLAYER_RUN,
+	PLAYER_COMBAT,
+	PLAYER_SHOOT,
 	NUM_OF_ANIMATION_STATES
 };
 

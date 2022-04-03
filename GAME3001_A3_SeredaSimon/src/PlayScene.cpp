@@ -266,7 +266,10 @@ void PlayScene::start()
 {
 	m_guiTitle = "Play Scene";
 
-	//TODO: Background
+
+	SoundManager::Instance().load("../Assets/audio/FallenLeaves.mp3", "fallen_leaves", SOUND_MUSIC);
+	SoundManager::Instance().setMusicVolume(16);
+	SoundManager::Instance().playMusic("fallen_leaves");
 
 	TextureManager::Instance().load("../Assets/tiles/MysticWoodsTileMap.png", "woodsTiles");
 	m_tiles.push_back(std::pair<std::string, TileObject*>("ground", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer1.txt", "woodsTiles")));
