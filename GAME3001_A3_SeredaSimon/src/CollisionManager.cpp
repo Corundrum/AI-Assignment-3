@@ -161,6 +161,51 @@ bool CollisionManager::AABBCheckWithBuffer(GameObject* object1, GameObject* obje
 	return false;
 }
 
+bool CollisionManager::AABBCheckWithBuffer(GameObject* object1, SDL_Rect* object2, int buffer)
+{
+	// prepare relevant variables
+	auto p1 = object1->getTransform()->position;
+	auto p2 = glm::vec2(object2->x + (object2->w / 2), object2->y + (object2->h / 2));
+	const float p1Width = object1->getWidth();
+	const float p1Height = object1->getHeight();
+	float p2Width = object2->w;
+	float p2Height = object2->h;
+
+	if (object1->isCentered())
+	{
+		p1 += glm::vec2(-p1Width * 0.5f, -p1Height * 0.5f);
+	}
+
+	// Add buffers.
+	p2.x -= (buffer / 2);
+	p2.y -= (buffer / 2);
+	p2Width += buffer;
+	p2Height += buffer;
+
+	if (
+		p1.x < p2.x + p2Width &&
+		p1.x + p1Width > p2.x &&
+		p1.y < p2.y + p2Height &&
+		p1.y + p1Height > p2.y
+		)
+	{
+		if (!object1->getRigidBody()->isColliding)
+		{
+			object1->getRigidBody()->isColliding = true;
+
+			return true;
+		}
+		return false;
+	}
+	else
+	{
+		object1->getRigidBody()->isColliding = false;
+		return false;
+	}
+
+	return false;
+}
+
 bool CollisionManager::lineLineCheck(const glm::vec2 line1_start, const glm::vec2 line1_end, const glm::vec2 line2_start, const glm::vec2 line2_end)
 {
 	const auto x1 = line1_start.x;

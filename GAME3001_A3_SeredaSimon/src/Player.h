@@ -17,11 +17,15 @@ public:
 	virtual void update() override;
 	virtual void clean() override;
 
+	SDL_Rect getHitBox() { return hitBox; }
+
 	// setters
 	void setAnimationState(PlayerAnimationState new_state);
 
 private:
 	void m_buildAnimations();
+
+	SDL_Rect hitBox;
 
 	bool isFacingLeft = 0;
 	PlayerAnimationState m_currentAnimationState;

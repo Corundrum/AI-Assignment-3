@@ -18,10 +18,10 @@ PlayScene::~PlayScene()
 
 void PlayScene::draw()
 {
-	for (auto const& i : m_tiles)
+	/*for (auto const& i : m_tiles)
 	{
 		i.second->draw();
-	}
+	}*/
 
 
 	drawDisplayList();

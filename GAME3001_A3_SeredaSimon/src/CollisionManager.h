@@ -18,6 +18,7 @@ public:
 
 	static bool AABBCheck(GameObject* object1, GameObject* object2);
 	static bool AABBCheckWithBuffer(GameObject* object1, GameObject* object2, int buffer);
+	static bool AABBCheckWithBuffer(GameObject* object1, SDL_Rect* object2, int buffer);
 
 	static bool lineLineCheck(glm::vec2 line1_start, glm::vec2 line1_end, glm::vec2 line2_start, glm::vec2 line2_end);
 

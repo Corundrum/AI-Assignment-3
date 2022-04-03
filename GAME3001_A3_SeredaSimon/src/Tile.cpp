@@ -90,7 +90,6 @@ TiledLevel::~TiledLevel()
 
 void TiledLevel::update()
 {
-	
 }
 
 void TiledLevel::draw()

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "TextureManager.h"
 #include "EventManager.h"
+#include "Util.h"
 
 Player::Player(): m_currentAnimationState(PLAYER_IDLE)
 {
@@ -20,6 +21,8 @@ Player::Player(): m_currentAnimationState(PLAYER_IDLE)
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->isColliding = false;
 	setType(PLAYER);
+
+	hitBox = { (int)getTransform()->position.x - getWidth() / 2, (int)getTransform()->position.y, getWidth() / 2, getHeight() / 2 };
 
 	m_buildAnimations();
 }
@@ -64,10 +67,14 @@ void Player::draw()
 		break;
 	}
 	
+	Util::DrawRect(glm::vec2(hitBox.x, hitBox.y), hitBox.w, hitBox.h, glm::vec4(1, 0, 0, 1));
+
 }
 
 void Player::update()
 {
+	hitBox = { (int)getTransform()->position.x, (int)getTransform()->position.y + 14, getWidth() / 2, getHeight() / 2 };
+
 	setAnimationState(PLAYER_IDLE);
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_W))
 	{
