@@ -73,7 +73,7 @@ void Player::draw()
 
 void Player::update()
 {
-	hitBox = { (int)getTransform()->position.x + 5, (int)getTransform()->position.y + 14, getWidth() / 2 - 10, getHeight() / 2 };
+	hitBox = { (int)getTransform()->position.x + 5, (int)getTransform()->position.y + 20, getWidth() / 2 - 10, getHeight() / 2 - 5};
 
 	setAnimationState(PLAYER_IDLE);
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_W))

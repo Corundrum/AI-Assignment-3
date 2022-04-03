@@ -38,7 +38,7 @@ public:
 	void LookWhereYoureGoing(glm::vec2 target_direction);
 
 	//new action functions
-
+	SDL_Rect getHitBox() { return hitBox; }
 
 	const DecisionTree* getTree();
 	bool debug = 0;
@@ -49,6 +49,8 @@ protected:
 	float m_accelerationRate;
 	int m_maxHealth;
 	int m_health;
+
+	SDL_Rect hitBox;
 
 	// new for Lab 7
 	std::vector<glm::vec2> m_patrol;

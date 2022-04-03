@@ -57,7 +57,84 @@ void PlayScene::update()
 		m_checkAllNodesWithTarget(m_pEnemies.back());
 		break;
 	}
+	
+	//Collision with obstacle tiles
+	TiledLevel* pLevel = static_cast<TiledLevel*>(GetGo("objects"));
+	for (unsigned i = 0; i < pLevel->getObstacles().size(); i++)
+	{
+		auto hitbox = Player::s_pPlayerObj->getHitBox();
+		auto box = *pLevel->getObstacles()[i]->getDst();
 
+		glm::vec2 top = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y);
+		glm::vec2 right = glm::vec2(hitbox.x + hitbox.w, hitbox.y + hitbox.h / 2);
+		glm::vec2 bottom = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y + hitbox.h);
+		glm::vec2 left = glm::vec2(hitbox.x, hitbox.y + hitbox.h / 2);
+
+		if (SDL_HasIntersection(&hitbox, &box))
+		{
+			if (right.x > box.x && right.x < box.x + box.w && right.y > box.y && right.y < box.y + box.h)
+			{
+				Player::s_pPlayerObj->getRigidBody()->velocity.x = 0;
+				Player::s_pPlayerObj->getRigidBody()->acceleration.x = 0;
+				Player::s_pPlayerObj->getTransform()->position.x -= 2.5;
+			}
+			if (left.x > box.x && left.x < box.x + box.w && left.y > box.y && left.y < box.y + box.h)
+			{
+				Player::s_pPlayerObj->getRigidBody()->velocity.x = 0;
+				Player::s_pPlayerObj->getRigidBody()->acceleration.x = 0;
+				Player::s_pPlayerObj->getTransform()->position.x += 2.5;
+			}
+			if (top.x > box.x && top.x < box.x + box.w && top.y > box.y && top.y < box.y + box.h)
+			{
+				Player::s_pPlayerObj->getRigidBody()->velocity.y = 0;
+				Player::s_pPlayerObj->getRigidBody()->acceleration.y = 0;
+				Player::s_pPlayerObj->getTransform()->position.y += 2.5;
+			}
+			if (bottom.x > box.x && bottom.x < box.x + box.w && bottom.y > box.y && bottom.y < box.y + box.h)
+			{
+				Player::s_pPlayerObj->getRigidBody()->velocity.y = 0;
+				Player::s_pPlayerObj->getRigidBody()->acceleration.y = 0;
+				Player::s_pPlayerObj->getTransform()->position.y -= 2.5;
+			}
+		}
+		for (auto enemy : m_pEnemies)
+		{
+			hitbox = enemy->getHitBox();
+			top = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y);
+			right = glm::vec2(hitbox.x + hitbox.w, hitbox.y + hitbox.h / 2);
+			bottom = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y + hitbox.h);
+			left = glm::vec2(hitbox.x, hitbox.y + hitbox.h / 2);
+			
+			if (SDL_HasIntersection(&hitbox, &box))
+			{
+				if (right.x > box.x && right.x < box.x + box.w && right.y > box.y && right.y < box.y + box.h)
+				{
+					enemy->getRigidBody()->velocity.x = 0;
+					enemy->getRigidBody()->acceleration.x = 0;
+					enemy->getTransform()->position.x -= 2;
+				}
+				if (left.x > box.x && left.x < box.x + box.w && left.y > box.y && left.y < box.y + box.h)
+				{
+					enemy->getRigidBody()->velocity.x = 0;
+					enemy->getRigidBody()->acceleration.x = 0;
+					enemy->getTransform()->position.x += 2;
+				}
+				if (top.x > box.x && top.x < box.x + box.w && top.y > box.y && top.y < box.y + box.h)
+				{
+					enemy->getRigidBody()->velocity.y = 0;
+					enemy->getRigidBody()->acceleration.y = 0;
+					enemy->getTransform()->position.y += 2;
+				}
+				if (bottom.x > box.x && bottom.x < box.x + box.w && bottom.y > box.y && bottom.y < box.y + box.h)
+				{
+					enemy->getRigidBody()->velocity.y = 0;
+					enemy->getRigidBody()->acceleration.y = 0;
+					enemy->getTransform()->position.y -= 2;
+				}
+			}
+
+		}
+	}
 }
 
 TileObject* PlayScene::GetGo(const std::string& s)
