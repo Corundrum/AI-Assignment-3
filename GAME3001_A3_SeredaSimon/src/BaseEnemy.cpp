@@ -9,6 +9,7 @@
 #include "MoveToLOSAction.h"
 #include "MoveToPlayerAction.h"
 #include "PatrolAction.h"
+#include "IdleAction.h"
 
 BaseEnemy::BaseEnemy()
 {
@@ -152,7 +153,11 @@ void BaseEnemy::m_move()
 void BaseEnemy::m_buildTree()
 {
 	// Create and add root node.
+	m_tree->setIdleNode(new IdleCondition());
+	m_tree->getTree().push_back(m_tree->getIdleNode());
+
 	m_tree->setLOSNode(new LOSCondition());
+	m_tree->addNode(m_tree->getIdleNode(), m_tree->getLOSNode(), LEFT_TREE_NODE);
 	m_tree->getTree().push_back(m_tree->getLOSNode());
 
 	m_tree->setRadiusNode(new RadiusCondition());
@@ -162,6 +167,10 @@ void BaseEnemy::m_buildTree()
 	m_tree->setCloseCombatNode(new CloseCombatCondition());
 	m_tree->addNode(m_tree->getLOSNode(), m_tree->getCloseCombatNode(), RIGHT_TREE_NODE);
 	m_tree->getTree().push_back(m_tree->getCloseCombatNode());
+
+	TreeNode* idleNode = m_tree->addNode(m_tree->getIdleNode(), new IdleAction(), RIGHT_TREE_NODE);
+	dynamic_cast<ActionNode*>(idleNode)->setAgent(this);
+	m_tree->getTree().push_back(idleNode);
 
 	TreeNode* patrolNode = m_tree->addNode(m_tree->getRadiusNode(), new PatrolAction(), LEFT_TREE_NODE);
 	dynamic_cast<ActionNode*>(patrolNode)->setAgent(this);

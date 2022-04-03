@@ -9,11 +9,12 @@
 #include "MoveToLOSAction.h"
 #include "MoveToPlayerAction.h"
 #include "PatrolAction.h"
+#include "IdleAction.h"
 
 #include "Sprite.h"
 #include "Player.h"
 
-CloseCombatEnemy::CloseCombatEnemy() : m_currentAnimationState(ENEMY_IDLE)
+CloseCombatEnemy::CloseCombatEnemy()
 {
 	TextureManager::Instance().loadSpriteSheet(
 		"../Assets/sprites/slugSpriteData.txt",
@@ -72,29 +73,41 @@ void CloseCombatEnemy::draw()
 	const auto x = getTransform()->position.x;
 	const auto y = getTransform()->position.y;
 	
-	switch (m_currentAnimationState)
+	switch (getActionState())
 	{
-	case ENEMY_IDLE:
+	case IDLE:
 		if (!isFacingLeft)
 		{
 			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("idle"),
+				x, y, 0.02f, 0, 255, this, true);
+		}
+		else
+		{
+			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("idle"),
+				x, y, 0.02f, 0, 255, this, true, SDL_FLIP_HORIZONTAL);
+		}
+		break;
+	case MOVE_TO_PLAYER:
+		if (!isFacingLeft)
+		{
+			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("MoveToPlayer"),
 				x, y, 0.12f, 0, 255, this, true);
 		}
 		else
 		{
-			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("idle"),
+			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("MoveToPlayer"),
 				x, y, 0.12f, 0, 255, this, true, SDL_FLIP_HORIZONTAL);
 		}
 		break;
-	case ENEMY_RUN:
+	case PATROL:
 		if (!isFacingLeft)
 		{
-			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("run"),
+			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("patrol"),
 				x, y, 0.10f, 0, 255, this, true);
 		}
 		else
 		{
-			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("run"),
+			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("patrol"),
 				x, y, 0.12f, 0, 255, this, true, SDL_FLIP_HORIZONTAL);
 		}
 		break;
@@ -128,14 +141,20 @@ void CloseCombatEnemy::draw()
 
 void CloseCombatEnemy::update()
 {
-
-	if (getRigidBody()->velocity.x == 0 && getRigidBody()->velocity.y == 0);
+	if (EventManager::Instance().keyPressed(SDL_SCANCODE_P))
 	{
-		m_currentAnimationState = ENEMY_IDLE;
+		if (getActionState() != IDLE)
+		{
+			m_tree->getIdleNode()->setWantsToIdle(1);
+		}
+		else
+		{
+			m_tree->getIdleNode()->setWantsToIdle(0);
+		}
 	}
+	
 	if (getRigidBody()->velocity.x > 0)
 	{
-		m_currentAnimationState = ENEMY_RUN;
 		if (!isFacingLeft)
 		{
 			isFacingLeft = true;
@@ -143,15 +162,10 @@ void CloseCombatEnemy::update()
 	}
 	else if (getRigidBody()->velocity.x < 0)
 	{
-		m_currentAnimationState = ENEMY_RUN;
 		if (isFacingLeft)
 		{
 			isFacingLeft = false;
 		}
-	}
-	else if (getRigidBody()->velocity.y > 0 || getRigidBody()->velocity.y < 0)
-	{
-		m_currentAnimationState = ENEMY_RUN;
 	}
 
 	if (Util::distance(getTransform()->position, glm::vec2(Player::s_pPlayerObj->getTransform()->position.x + 24, Player::s_pPlayerObj->getTransform()->position.y + 24)) < 250)
@@ -178,6 +192,15 @@ void CloseCombatEnemy::clean()
 
 }
 
+void CloseCombatEnemy::idle()
+{
+	if (getActionState() != IDLE)
+	{
+		//initialize the action
+		setActionState(IDLE);
+	}
+}
+
 void CloseCombatEnemy::patrol()
 {
 	if (getActionState() != PATROL)
@@ -202,17 +225,23 @@ void CloseCombatEnemy::moveToPlayer()
 
 void CloseCombatEnemy::m_buildAnimations()
 {
+	Animation moveToPlayerAnimation = Animation();
+	moveToPlayerAnimation.name = "MoveToPlayer";
+	moveToPlayerAnimation.frames.push_back(getSpriteSheet()->getFrame("MoveToPlayer-0"));
+	moveToPlayerAnimation.frames.push_back(getSpriteSheet()->getFrame("MoveToPlayer-1"));
+	setAnimation(moveToPlayerAnimation);
+
 	Animation idleAnimation = Animation();
 	idleAnimation.name = "idle";
 	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("Idle-0"));
 	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("Idle-1"));
 	setAnimation(idleAnimation);
 
-	Animation runAnimation = Animation();
-	runAnimation.name = "run";
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("Run-0"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("Run-1"));
-	setAnimation(runAnimation);
+	Animation patrolAnimation = Animation();
+	patrolAnimation.name = "patrol";
+	patrolAnimation.frames.push_back(getSpriteSheet()->getFrame("Patrol-0"));
+	patrolAnimation.frames.push_back(getSpriteSheet()->getFrame("Patrol-1"));
+	setAnimation(patrolAnimation);
 
 	Animation AttackAnimation = Animation();
 	AttackAnimation.name = "attack";

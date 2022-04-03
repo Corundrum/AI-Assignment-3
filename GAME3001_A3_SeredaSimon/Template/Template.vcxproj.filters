@@ -198,6 +198,12 @@
     <ClCompile Include="..\src\BaseEnemy.cpp">
       <Filter>Decisions\Agents</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\IdleCondition.cpp">
+      <Filter>Decisions\Conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\IdleAction.cpp">
+      <Filter>Decisions\Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -409,6 +415,12 @@
     </ClInclude>
     <ClInclude Include="..\src\EnemyAnimationState.h">
       <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\IdleCondition.h">
+      <Filter>Decisions\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\IdleAction.h">
+      <Filter>Decisions\Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

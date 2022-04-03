@@ -3,6 +3,7 @@
 #include "MoveToLOSAction.h"
 #include "MoveToPlayerAction.h"
 #include "PatrolAction.h"
+#include "IdleAction.h"
 #include <iostream>
 
 DecisionTree::DecisionTree()
@@ -26,6 +27,11 @@ void DecisionTree::setAgent(Agent* agent)
 	m_agent = agent;
 }
 
+IdleCondition* DecisionTree::getIdleNode() const
+{
+	return m_idleNode;
+}
+
 LOSCondition* DecisionTree::getLOSNode() const
 {
 	return m_LOSNode;
@@ -44,6 +50,11 @@ CloseCombatCondition* DecisionTree::getCloseCombatNode() const
 std::vector<TreeNode*>& DecisionTree::getTree()
 {
 	return m_treeNodeList;
+}
+
+void DecisionTree::setIdleNode(IdleCondition* node)
+{
+	m_idleNode = node;
 }
 
 void DecisionTree::setLOSNode(LOSCondition* node)
@@ -98,6 +109,7 @@ void DecisionTree::clean()
 	m_treeNodeList.clear();
 	m_treeNodeList.shrink_to_fit();
 	//wrangle remaining pointers
+	m_idleNode = nullptr;
 	m_LOSNode = nullptr;
 	m_RadiusNode = nullptr;
 	m_CloseCombatNode = nullptr;
