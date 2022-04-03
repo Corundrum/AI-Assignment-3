@@ -20,6 +20,7 @@ public:
 	//new action functions
 	void idle() override;
 	void death() override;
+	void takeDamage() override;
 	void patrol() override;
 	void moveToPlayer() override;
 private:

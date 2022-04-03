@@ -63,6 +63,7 @@ public:
 	virtual void patrol() {}
 	virtual void idle() {}
 	virtual void death() {}
+	virtual void takeDamage() {}
 
 	//New Utilty
 

@@ -38,7 +38,10 @@ void PlayScene::draw()
 
 	Util::DrawRect(glm::vec2(15, 13), 202, 26, glm::vec4(1, 1, 1, 1));
 	Util::DrawFilledRect(glm::vec2(16, 14), 200, 24, glm::vec4(0,0,0,1));
-	Util::DrawFilledRect(glm::vec2(16, 14), 200 * health_percent, 24, glm::vec4(1, 0.2, 0.2, 1));
+	if (health_percent > 0)
+	{
+		Util::DrawFilledRect(glm::vec2(16, 14), 200 * health_percent, 24, glm::vec4(1, 0.2, 0.2, 1));
+	}
 
 	
 	std::stringstream stream;
@@ -46,6 +49,14 @@ void PlayScene::draw()
 	const std::string total_score = stream.str();
 	m_score->setText(total_score);
 	
+	if (m_isGridEnabled)
+	{
+		Util::DrawRect(glm::vec2(Player::s_pPlayerObj->getHitBox().x, Player::s_pPlayerObj->getHitBox().y), Player::s_pPlayerObj->getHitBox().w, Player::s_pPlayerObj->getHitBox().h, glm::vec4(1, 0, 0, 1));
+		for (auto obstacle : m_pObstacles)
+		{
+			Util::DrawRect(glm::vec2(obstacle->getTransform()->position.x - 10, obstacle->getTransform()->position.y + 44), obstacle->getWidth() * 0.75, obstacle->getHeight() * 0.35, glm::vec4(1, 0, 0, 1));
+		}
+	}
 
 }
 
@@ -94,6 +105,14 @@ void PlayScene::update()
 
 
 	//ALL COLLISION
+
+	for (auto enemy : BaseEnemy::s_EnemiesObj)
+	{
+		if (SDL_HasIntersection(&enemy->getHitBox(), &Player::s_pPlayerObj->getHitBox()))
+		{
+			playerHealth -= 1;
+		}
+	}
 
 	for (auto obstacle : m_pObstacles)
 	{
@@ -346,7 +365,7 @@ void PlayScene::start()
 	addChild(m_pObstacles.back(), 2);
 
 	m_LOSMode = 0;
-	m_obstacleBuffer = -5;
+	m_obstacleBuffer = 0;
 
 	m_isGridEnabled = false;
 	m_buildGrid();

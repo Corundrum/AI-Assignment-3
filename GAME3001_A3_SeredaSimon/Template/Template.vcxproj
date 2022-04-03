@@ -187,6 +187,8 @@
     <ClCompile Include="..\src\RadiusCondition.cpp" />
     <ClCompile Include="..\src\RangedCombatEnemy.cpp" />
     <ClCompile Include="..\src\Sprite.cpp" />
+    <ClCompile Include="..\src\TakeDamageAction.cpp" />
+    <ClCompile Include="..\src\TakeDamageCondition.cpp" />
     <ClCompile Include="..\src\Tile.cpp" />
     <ClCompile Include="..\src\TileObjects.cpp" />
     <ClCompile Include="..\src\UIControl.cpp" />
@@ -254,6 +256,8 @@
     <ClInclude Include="..\src\RangedCombatEnemy.h" />
     <ClInclude Include="..\src\SoundType.h" />
     <ClInclude Include="..\src\Sprite.h" />
+    <ClInclude Include="..\src\TakeDamageAction.h" />
+    <ClInclude Include="..\src\TakeDamageCondition.h" />
     <ClInclude Include="..\src\Tile.h" />
     <ClInclude Include="..\src\TileObjects.h" />
     <ClInclude Include="..\src\TreeNode.h" />

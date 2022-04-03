@@ -14,7 +14,7 @@ PathNode::PathNode()
 	setCurrentHeading(0.0f);// current facing angle
 	setCurrentDirection(glm::vec2(1.0f, 0.0f)); // facing right
 
-	setLOSDistance(1000.0f); 
+	setLOSDistance(250.0f); 
 	setLOSColour(glm::vec4(0, 0.5, 1, 1));
 }
 

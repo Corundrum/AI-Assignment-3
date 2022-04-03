@@ -140,7 +140,7 @@ void Player::update()
 		{
 			if (CollisionManager::AABBCheck(m_pBullets[i], &enemy->getHitBox()))
 			{
-				enemy->setHealth(enemy->getHealth() - 1);
+				enemy->takeDamage();
 				m_pBullets[i] = nullptr;
 				m_pBullets.erase(m_pBullets.begin() + i);
 				m_pBullets.shrink_to_fit();
@@ -255,7 +255,7 @@ void Player::SwordSlash()
 	{
 		if (SDL_HasIntersection(&SwordHitBox, &enemy->getHitBox()))
 		{
-			enemy->setHealth(enemy->getHealth() - 3);
+			enemy->takeDamage();
 			SoundManager::Instance().playSound("splat");
 		}
 	}

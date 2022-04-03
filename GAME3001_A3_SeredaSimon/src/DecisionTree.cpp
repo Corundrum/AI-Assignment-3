@@ -5,6 +5,7 @@
 #include "PatrolAction.h"
 #include "IdleAction.h"
 #include "DeathAction.h"
+#include "TakeDamageAction.h"
 #include <iostream>
 
 DecisionTree::DecisionTree()
@@ -38,6 +39,11 @@ DeathCondition* DecisionTree::getDeathNode() const
 	return m_deathNode;
 }
 
+TakeDamageCondition* DecisionTree::getTakeDamageNode() const
+{
+	return m_takeDamageNode;
+}
+
 LOSCondition* DecisionTree::getLOSNode() const
 {
 	return m_LOSNode;
@@ -66,6 +72,11 @@ void DecisionTree::setIdleNode(IdleCondition* node)
 void DecisionTree::setDeathNode(DeathCondition* node)
 {
 	m_deathNode = node;
+}
+
+void DecisionTree::setTakeDamageNode(TakeDamageCondition* node)
+{
+	m_takeDamageNode = node;
 }
 
 void DecisionTree::setLOSNode(LOSCondition* node)
@@ -121,6 +132,8 @@ void DecisionTree::clean()
 	m_treeNodeList.shrink_to_fit();
 	//wrangle remaining pointers
 	m_idleNode = nullptr;
+	m_deathNode = nullptr;
+	m_takeDamageNode = nullptr;
 	m_LOSNode = nullptr;
 	m_RadiusNode = nullptr;
 	m_CloseCombatNode = nullptr;

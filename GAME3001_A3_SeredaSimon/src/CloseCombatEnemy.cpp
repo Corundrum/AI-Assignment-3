@@ -11,6 +11,7 @@
 #include "PatrolAction.h"
 #include "IdleAction.h"
 #include "DeathAction.h"
+#include "TakeDamageAction.h"
 
 #include "Sprite.h"
 #include "Player.h"
@@ -97,6 +98,23 @@ void CloseCombatEnemy::draw()
 				x, y, 0.08f, 0, 255, this, true, SDL_FLIP_HORIZONTAL);
 		}
 		break;
+	case TAKE_DAMAGE:
+		if (!isFacingLeft)
+		{
+			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("take_damage"),
+				x, y, 0.08f, 0, 255, this, true);
+		}
+		else
+		{
+			TextureManager::Instance().playAnimation("slugSpriteSheet", getAnimation("take_damage"),
+				x, y, 0.08f, 0, 255, this, true, SDL_FLIP_HORIZONTAL);
+		}
+		if (getAnimation("take_damage").current_frame == 2)
+		{
+			getAnimation("take_damage").current_frame = 0;
+			m_tree->getTakeDamageNode()->setTakingDamage(false);
+		}
+		break;
 	case IDLE:
 		if (!isFacingLeft)
 		{
@@ -154,9 +172,8 @@ void CloseCombatEnemy::draw()
 	{
 		Util::DrawCircle(getTransform()->position, 250, circleColour);
 		Util::DrawLine(getTransform()->position, getMiddleLOSEndPoint(), getLOSColour());
+		Util::DrawRect(glm::vec2(hitBox.x, hitBox.y), hitBox.w, hitBox.h, glm::vec4(1, 0, 0, 1));
 	}
-
-	//Util::DrawRect(glm::vec2(hitBox.x, hitBox.y), hitBox.w, hitBox.h, glm::vec4(1, 0, 0, 1));
 
 
 	drawHealthBar();
@@ -267,6 +284,17 @@ void CloseCombatEnemy::death()
 		setActionState(DEATH);
 		SoundManager::Instance().playSound("death");
 		Player::s_pPlayerObj->addScore(10);
+	}
+}
+
+void CloseCombatEnemy::takeDamage()
+{
+	if (getActionState() != TAKE_DAMAGE)
+	{
+		m_tree->getTakeDamageNode()->setTakingDamage(true);
+		//initialize the action
+		setHealth(getHealth() - 2);
+		setActionState(TAKE_DAMAGE);
 	}
 }
 

@@ -10,6 +10,7 @@ enum ActionState
 	MOVE_TO_RANGE,
 	IDLE,
 	DEATH,
+	TAKE_DAMAGE,
 	PATROL
 };
 #endif /* defined (__ACTION_STATE__)*/

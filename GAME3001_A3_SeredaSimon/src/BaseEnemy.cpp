@@ -11,6 +11,7 @@
 #include "PatrolAction.h"
 #include "IdleAction.h"
 #include "DeathAction.h"
+#include "TakeDamageAction.h"
 
 BaseEnemy::BaseEnemy()
 {
@@ -160,8 +161,12 @@ void BaseEnemy::m_buildTree()
 	m_tree->setDeathNode(new DeathCondition());
 	m_tree->getTree().push_back(m_tree->getDeathNode());
 
+	m_tree->setTakeDamageNode(new TakeDamageCondition());
+	m_tree->addNode(m_tree->getDeathNode(), m_tree->getTakeDamageNode(), LEFT_TREE_NODE);
+	m_tree->getTree().push_back(m_tree->getTakeDamageNode());
+
 	m_tree->setIdleNode(new IdleCondition());
-	m_tree->addNode(m_tree->getDeathNode(), m_tree->getIdleNode(), LEFT_TREE_NODE);
+	m_tree->addNode(m_tree->getTakeDamageNode(), m_tree->getIdleNode(), LEFT_TREE_NODE);
 	m_tree->getTree().push_back(m_tree->getIdleNode());
 
 	m_tree->setLOSNode(new LOSCondition());
@@ -179,6 +184,10 @@ void BaseEnemy::m_buildTree()
 	TreeNode* deathNode = m_tree->addNode(m_tree->getDeathNode(), new DeathAction(), RIGHT_TREE_NODE);
 	dynamic_cast<ActionNode*>(deathNode)->setAgent(this);
 	m_tree->getTree().push_back(deathNode);
+
+	TreeNode* takeDamageNode = m_tree->addNode(m_tree->getTakeDamageNode(), new TakeDamageAction(), RIGHT_TREE_NODE);
+	dynamic_cast<ActionNode*>(takeDamageNode)->setAgent(this);
+	m_tree->getTree().push_back(takeDamageNode);
 
 	TreeNode* idleNode = m_tree->addNode(m_tree->getIdleNode(), new IdleAction(), RIGHT_TREE_NODE);
 	dynamic_cast<ActionNode*>(idleNode)->setAgent(this);

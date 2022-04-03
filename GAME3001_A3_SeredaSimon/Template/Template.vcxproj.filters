@@ -213,6 +213,12 @@
     <ClCompile Include="..\src\Bullet.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\TakeDamageCondition.cpp">
+      <Filter>Decisions\Conditions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TakeDamageAction.cpp">
+      <Filter>Decisions\Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -439,6 +445,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Bullet.h">
       <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TakeDamageCondition.h">
+      <Filter>Decisions\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TakeDamageAction.h">
+      <Filter>Decisions\Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
