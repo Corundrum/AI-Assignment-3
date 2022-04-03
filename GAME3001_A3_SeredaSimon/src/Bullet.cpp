@@ -22,11 +22,12 @@ void Bullet::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the target
-	TextureManager::Instance().draw("bullet", x, y, this, 0, 255, true);
+	TextureManager::Instance().draw("bullet", x, y, this, 0, 255, false);
 }
 
 void Bullet::update()
 {
+
 	m_move();
 }
 

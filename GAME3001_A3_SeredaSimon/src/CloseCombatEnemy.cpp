@@ -22,6 +22,9 @@ CloseCombatEnemy::CloseCombatEnemy()
 		"../Assets/sprites/slug.png",
 		"slugSpriteSheet");
 
+	SoundManager::Instance().load("../Assets/audio/squish.wav", "squish", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/death.wav", "death", SOUND_SFX);
+
 	setSpriteSheet(TextureManager::Instance().getSpriteSheet("slugSpriteSheet"));
 	setWidth(48);
 	setHeight(48);
@@ -212,8 +215,29 @@ void CloseCombatEnemy::update()
 			m_tree->getDeathNode()->setIsDead(true);
 		}
 
+		if (walkTimer >= 1.5 && (getActionState() == PATROL || getActionState() == MOVE_TO_PLAYER))
+		{
+			walkTimer = 0;
+			SoundManager::Instance().playSound("squish");
+		}
+
 		// Determine which action to perform
 		m_tree->makeDecision();
+	}
+	else
+	{
+		getRigidBody()->acceleration = glm::vec2(0, 0);
+		getRigidBody()->velocity = glm::vec2(0, 0);
+	}
+
+
+
+	//Timers
+	const float delta_time = TheGame::Instance().getDeltaTime();
+
+	if (walkTimer < 1.5)
+	{
+		walkTimer += delta_time;
 	}
 }
 
@@ -237,8 +261,7 @@ void CloseCombatEnemy::death()
 	{
 		//initialize the action
 		setActionState(DEATH);
-		getRigidBody()->acceleration = glm::vec2(0,0);
-		getRigidBody()->velocity = glm::vec2(0,0);
+		SoundManager::Instance().playSound("death");
 	}
 }
 

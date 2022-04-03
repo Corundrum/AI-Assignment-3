@@ -37,6 +37,8 @@ private:
 	bool mouseLeft;
 	bool mouseRight;
 
+	float walkTimer = 1;
+
 	bool isFacingLeft = 0;
 	PlayerAnimationState m_currentAnimationState;
 };

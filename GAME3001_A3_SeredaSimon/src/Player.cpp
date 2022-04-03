@@ -5,6 +5,7 @@
 #include "BaseEnemy.h"
 #include "SoundManager.h"
 #include "CollisionManager.h"
+#include "Game.h"
 
 Player::Player(): m_currentAnimationState(PLAYER_IDLE)
 {
@@ -16,6 +17,7 @@ Player::Player(): m_currentAnimationState(PLAYER_IDLE)
 	SoundManager::Instance().load("../Assets/audio/Explosion.wav", "explosion", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/swordSwing.wav", "sword_swing", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/Splat.wav", "splat", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/Footstep.wav", "footstep", SOUND_SFX);
 
 	setSpriteSheet(TextureManager::Instance().getSpriteSheet("playerSpriteSheet"));
 	
@@ -120,19 +122,24 @@ void Player::draw()
 
 void Player::update()
 {
+	// checks
 	hitBox = { (int)getTransform()->position.x + 5, (int)getTransform()->position.y + 20, getWidth() / 2 - 10, getHeight() / 2 - 5};
 
-	for (auto bullet : m_pBullets)
+	for (unsigned i = 0; i < m_pBullets.size(); i++)
 	{
 		for (auto enemy : BaseEnemy::s_EnemiesObj)
 		{
-			if (CollisionManager::AABBCheck(bullet, &enemy->getHitBox()))
+			if (CollisionManager::AABBCheck(m_pBullets[i], &enemy->getHitBox()))
 			{
 				enemy->setHealth(enemy->getHealth() - 1);
+				getParent()->removeChild(m_pBullets[i]);
+				m_pBullets[i] = nullptr;
+				m_pBullets.erase(m_pBullets.begin() + i);
+				m_pBullets.shrink_to_fit();
 			}
 		}
 	}
-
+	//controls
 	if (m_currentAnimationState != PLAYER_COMBAT && m_currentAnimationState != PLAYER_SHOOT)
 	{
 		
@@ -166,10 +173,26 @@ void Player::update()
 			getTransform()->position.x += 2.5;
 		}
 
+		if (walkTimer >= 1 && m_currentAnimationState == PLAYER_RUN)
+		{
+			walkTimer = 0.7;
+			SoundManager::Instance().playSound("footstep");
+		}
+
 		Attack();
 		Shoot();
 
 	}
+
+
+	// timers
+	const float delta_time = TheGame::Instance().getDeltaTime();
+
+	if (walkTimer < 1)
+	{
+		walkTimer += delta_time;
+	}
+
 }
 
 void Player::clean()

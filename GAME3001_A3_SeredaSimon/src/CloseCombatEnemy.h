@@ -25,6 +25,8 @@ public:
 private:
 	bool isWithinRadius = 0;
 
+	float walkTimer = 1;
+
 	// private movement variables
 	void m_buildAnimations();
 	bool isFacingLeft = 0;
