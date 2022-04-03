@@ -22,7 +22,7 @@ Player::Player(): m_currentAnimationState(PLAYER_IDLE)
 	getRigidBody()->isColliding = false;
 	setType(PLAYER);
 
-	hitBox = { (int)getTransform()->position.x - getWidth() / 2, (int)getTransform()->position.y, getWidth() / 2, getHeight() / 2 };
+	hitBox = { (int)getTransform()->position.x - getWidth() / 2 + 5, (int)getTransform()->position.y, getWidth() / 2 - 10, getHeight() / 2 };
 
 	m_buildAnimations();
 }
@@ -73,18 +73,18 @@ void Player::draw()
 
 void Player::update()
 {
-	hitBox = { (int)getTransform()->position.x, (int)getTransform()->position.y + 14, getWidth() / 2, getHeight() / 2 };
+	hitBox = { (int)getTransform()->position.x + 5, (int)getTransform()->position.y + 14, getWidth() / 2 - 10, getHeight() / 2 };
 
 	setAnimationState(PLAYER_IDLE);
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_W))
 	{
 		setAnimationState(PLAYER_RUN);
-		getTransform()->position.y -= 4;
+		getTransform()->position.y -= 2.5;
 	}
 	else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_S))
 	{
 		setAnimationState(PLAYER_RUN);
-		getTransform()->position.y += 4;
+		getTransform()->position.y += 2.5;
 	}
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_A))
 	{
@@ -93,7 +93,7 @@ void Player::update()
 			isFacingLeft = true;
 		}
 		setAnimationState(PLAYER_RUN);
-		getTransform()->position.x -= 4;
+		getTransform()->position.x -= 2.5;
 	}
 	else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_D))
 	{
@@ -102,7 +102,7 @@ void Player::update()
 			isFacingLeft = false;
 		}
 		setAnimationState(PLAYER_RUN);
-		getTransform()->position.x += 4;
+		getTransform()->position.x += 2.5;
 	}
 
 }

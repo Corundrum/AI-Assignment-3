@@ -12,7 +12,6 @@ public:
 	virtual ~TileObject() {};
 	virtual void update() = 0;
 	virtual void draw() = 0;
-	SDL_Rect getDstL() { return m_dst; }
 	SDL_Rect* getDst() { return &m_dst; }
 	const bool getEnabled() const { return m_enabled; }
 	void setEnabled(const bool e) { m_enabled = e; }

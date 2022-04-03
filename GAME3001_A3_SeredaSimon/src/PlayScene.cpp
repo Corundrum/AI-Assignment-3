@@ -18,11 +18,10 @@ PlayScene::~PlayScene()
 
 void PlayScene::draw()
 {
-	/*for (auto const& i : m_tiles)
+	for (auto const& i : m_tiles)
 	{
 		i.second->draw();
-	}*/
-
+	}
 
 	drawDisplayList();
 
@@ -40,6 +39,11 @@ void PlayScene::update()
 {
 	updateDisplayList();
 	
+	for (auto const& i : m_tiles)
+	{
+		i.second->update();
+	}
+
 	//LOS Checks for Enemies to player
 	for (auto enemy : m_pEnemies)
 	{
@@ -53,6 +57,22 @@ void PlayScene::update()
 		m_checkAllNodesWithTarget(m_pEnemies.back());
 		break;
 	}
+
+}
+
+TileObject* PlayScene::GetGo(const std::string& s)
+{
+	auto it = std::find_if(m_tiles.begin(), m_tiles.end(), 
+		[&](const std::pair<std::string, TileObject*>& element)
+		{
+			return element.first == s;
+		}
+	);
+	if (it != m_tiles.end())
+	{
+		return it->second;
+	}
+	else return nullptr;
 }
 
 void PlayScene::clean()
@@ -94,9 +114,8 @@ void PlayScene::start()
 	//TODO: Background
 
 	TextureManager::Instance().load("../Assets/tiles/MysticWoodsTileMap.png", "woodsTiles");
-	m_tiles.push_back(std::pair<std::string, TileObject*>("level", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer1.txt", "woodsTiles")));
-	m_tiles.push_back(std::pair<std::string, TileObject*>("level", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer2.txt", "woodsTiles")));
-
+	m_tiles.push_back(std::pair<std::string, TileObject*>("ground", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer1.txt", "woodsTiles")));
+	m_tiles.push_back(std::pair<std::string, TileObject*>("objects", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer2.txt", "woodsTiles")));
 
 	m_pObstacles.push_back(new Obstacle());
 	m_pObstacles.back()->getTransform()->position = glm::vec2(250, 500);
@@ -144,6 +163,16 @@ void PlayScene::m_buildGrid()
 					keepNode = false; // We have collision between node and an obstacle
 				}
 			}
+			
+			TiledLevel* pLevel = static_cast<TiledLevel*>(GetGo("objects"));
+			for (unsigned i = 0; i < pLevel->getObstacles().size(); i++)
+			{
+				if (CollisionManager::AABBCheckWithBuffer(path_node, pLevel->getObstacles()[i]->getDst(), m_obstacleBuffer))
+				{
+					keepNode = false;
+				}
+			}
+
 			if (keepNode)
 			{
 				addChild(path_node, 0);
@@ -226,6 +255,8 @@ void PlayScene::m_setPathNodeLOSDistance(int distance)
 		path_node->setLOSDistance((float)distance);
 	}
 }
+
+
 
 void PlayScene::GUI_Function()
 {

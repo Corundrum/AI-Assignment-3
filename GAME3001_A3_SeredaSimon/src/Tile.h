@@ -37,7 +37,7 @@ public:
 	void clean();
 
 	std::vector<Tile*>& getObstacles() { return m_obstacles; }
-
+	
 private:
 	const std::string m_tileKey;
 	int m_rows, m_cols;

@@ -49,12 +49,16 @@ private:
 	void m_clearNodes();
 	void m_setPathNodeLOSDistance(int distance);
 
+	TileObject* GetGo(const std::string& s);
+
 	int playerHealth = 100;
 
 	int m_LOSMode;
 	int m_obstacleBuffer;
 	int m_pathNodeLOSDistance;
 	
+	
+
 	//tilemap
 	std::vector<std::pair<std::string, TileObject*>> m_tiles;
 
