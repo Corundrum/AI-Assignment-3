@@ -58,13 +58,13 @@ void PlayScene::update()
 		break;
 	}
 	
-	//Collision with obstacle tiles
-	TiledLevel* pLevel = static_cast<TiledLevel*>(GetGo("objects"));
-	for (unsigned i = 0; i < pLevel->getObstacles().size(); i++)
+	//ALL COLLISION
+
+	for (auto obstacle : m_pObstacles)
 	{
 		auto hitbox = Player::s_pPlayerObj->getHitBox();
-		auto box = *pLevel->getObstacles()[i]->getDst();
-
+		SDL_Rect box = { obstacle->getTransform()->position.x - 10, obstacle->getTransform()->position.y + 44, obstacle->getWidth() * 0.75, obstacle->getHeight() * 0.35 };
+		
 		glm::vec2 top = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y);
 		glm::vec2 right = glm::vec2(hitbox.x + hitbox.w, hitbox.y + hitbox.h / 2);
 		glm::vec2 bottom = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y + hitbox.h);
@@ -104,7 +104,7 @@ void PlayScene::update()
 			right = glm::vec2(hitbox.x + hitbox.w, hitbox.y + hitbox.h / 2);
 			bottom = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y + hitbox.h);
 			left = glm::vec2(hitbox.x, hitbox.y + hitbox.h / 2);
-			
+
 			if (SDL_HasIntersection(&hitbox, &box))
 			{
 				if (right.x > box.x && right.x < box.x + box.w && right.y > box.y && right.y < box.y + box.h)
@@ -132,7 +132,85 @@ void PlayScene::update()
 					enemy->getTransform()->position.y -= 2;
 				}
 			}
+		}
+	}
 
+	//Collision with obstacle tiles
+	TiledLevel* pLevel = static_cast<TiledLevel*>(GetGo("objects"));
+	for (unsigned i = 0; i < pLevel->getObstacles().size(); i++)
+	{
+		auto hitbox = Player::s_pPlayerObj->getHitBox();
+		auto box = *pLevel->getObstacles()[i]->getDst();
+
+		glm::vec2 top = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y);
+		glm::vec2 right = glm::vec2(hitbox.x + hitbox.w, hitbox.y + hitbox.h / 2);
+		glm::vec2 bottom = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y + hitbox.h);
+		glm::vec2 left = glm::vec2(hitbox.x, hitbox.y + hitbox.h / 2);
+
+		if (SDL_HasIntersection(&hitbox, &box))
+		{
+			if (right.x > box.x && right.x < box.x + box.w && right.y > box.y && right.y < box.y + box.h)
+			{
+				Player::s_pPlayerObj->getRigidBody()->velocity.x = 0;
+				Player::s_pPlayerObj->getRigidBody()->acceleration.x = 0;
+				Player::s_pPlayerObj->getTransform()->position.x -= 2.5;
+			}
+			if (left.x > box.x && left.x < box.x + box.w && left.y > box.y && left.y < box.y + box.h)
+			{
+				Player::s_pPlayerObj->getRigidBody()->velocity.x = 0;
+				Player::s_pPlayerObj->getRigidBody()->acceleration.x = 0;
+				Player::s_pPlayerObj->getTransform()->position.x += 2.5;
+			}
+			if (top.x > box.x && top.x < box.x + box.w && top.y > box.y && top.y < box.y + box.h)
+			{
+				Player::s_pPlayerObj->getRigidBody()->velocity.y = 0;
+				Player::s_pPlayerObj->getRigidBody()->acceleration.y = 0;
+				Player::s_pPlayerObj->getTransform()->position.y += 2.5;
+			}
+			if (bottom.x > box.x && bottom.x < box.x + box.w && bottom.y > box.y && bottom.y < box.y + box.h)
+			{
+				Player::s_pPlayerObj->getRigidBody()->velocity.y = 0;
+				Player::s_pPlayerObj->getRigidBody()->acceleration.y = 0;
+				Player::s_pPlayerObj->getTransform()->position.y -= 2.5;
+			}
+
+		}
+		for (auto enemy : m_pEnemies)
+		{
+			hitbox = enemy->getHitBox();
+			top = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y);
+			right = glm::vec2(hitbox.x + hitbox.w, hitbox.y + hitbox.h / 2);
+			bottom = glm::vec2(hitbox.x + hitbox.w / 2, hitbox.y + hitbox.h);
+			left = glm::vec2(hitbox.x, hitbox.y + hitbox.h / 2);
+
+			if (SDL_HasIntersection(&hitbox, &box))
+			{
+				if (right.x > box.x && right.x < box.x + box.w && right.y > box.y && right.y < box.y + box.h)
+				{
+					enemy->getRigidBody()->velocity.x = 0;
+					enemy->getRigidBody()->acceleration.x = 0;
+					enemy->getTransform()->position.x -= 2;
+				}
+				if (left.x > box.x && left.x < box.x + box.w && left.y > box.y && left.y < box.y + box.h)
+				{
+					enemy->getRigidBody()->velocity.x = 0;
+					enemy->getRigidBody()->acceleration.x = 0;
+					enemy->getTransform()->position.x += 2;
+				}
+				if (top.x > box.x && top.x < box.x + box.w && top.y > box.y && top.y < box.y + box.h)
+				{
+					enemy->getRigidBody()->velocity.y = 0;
+					enemy->getRigidBody()->acceleration.y = 0;
+					enemy->getTransform()->position.y += 2;
+				}
+				if (bottom.x > box.x && bottom.x < box.x + box.w && bottom.y > box.y && bottom.y < box.y + box.h)
+				{
+					enemy->getRigidBody()->velocity.y = 0;
+					enemy->getRigidBody()->acceleration.y = 0;
+					enemy->getTransform()->position.y -= 2;
+				}
+			}
+		
 		}
 	}
 }
@@ -194,20 +272,32 @@ void PlayScene::start()
 	m_tiles.push_back(std::pair<std::string, TileObject*>("ground", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer1.txt", "woodsTiles")));
 	m_tiles.push_back(std::pair<std::string, TileObject*>("objects", new TiledLevel(25, 34, 24, 24, "../Assets/tiles/TileData.txt", "../Assets/tiles/ForestLayer2.txt", "woodsTiles")));
 
-	m_pObstacles.push_back(new Obstacle());
-	m_pObstacles.back()->getTransform()->position = glm::vec2(250, 500);
-	addChild(m_pObstacles.back());
-
 	m_pEnemies.push_back(new CloseCombatEnemy());
-	m_pEnemies.back()->getTransform()->position = glm::vec2(400, 40);
+	m_pEnemies.back()->getTransform()->position = glm::vec2(720, 40);
 	addChild(m_pEnemies.back());
 
 	Player::s_pPlayerObj = new Player();
-	Player::s_pPlayerObj->getTransform()->position = glm::vec2(150, 400);
-	addChild(Player::s_pPlayerObj, 2);
+	Player::s_pPlayerObj->getTransform()->position = glm::vec2(120, 300);
+	addChild(Player::s_pPlayerObj, 1);
+
+	m_pObstacles.push_back(new Obstacle());
+	m_pObstacles.back()->getTransform()->position = glm::vec2(150, 440);
+	addChild(m_pObstacles.back(), 2);
+
+	m_pObstacles.push_back(new Obstacle());
+	m_pObstacles.back()->getTransform()->position = glm::vec2(535, 290);
+	addChild(m_pObstacles.back(), 2);
+
+	m_pObstacles.push_back(new Obstacle());
+	m_pObstacles.back()->getTransform()->position = glm::vec2(130, 210);
+	addChild(m_pObstacles.back(), 2);
+
+	m_pObstacles.push_back(new Obstacle());
+	m_pObstacles.back()->getTransform()->position = glm::vec2(380, 220);
+	addChild(m_pObstacles.back(), 2);
 
 	m_LOSMode = 0;
-	m_obstacleBuffer = 0;
+	m_obstacleBuffer = -5;
 	m_pathNodeLOSDistance = 250;
 	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 

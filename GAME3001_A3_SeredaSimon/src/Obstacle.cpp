@@ -6,13 +6,13 @@
 
 Obstacle::Obstacle()
 {
-	TextureManager::Instance().load("../Assets/textures/obstacle.png", "obstacle");
+	TextureManager::Instance().load("../Assets/textures/tree.png", "obstacle");
 
-	auto size = TextureManager::Instance().getTextureSize("obstacle");
-	setWidth(size.x);
-	setHeight(size.y);
+	setWidth(88);
+	setHeight(128);
 
 	setType(OBSTACLE);
+
 	getRigidBody()->isColliding = false;
 }
 
@@ -21,8 +21,7 @@ Obstacle::~Obstacle()
 
 void Obstacle::draw()
 {
-	TextureManager::Instance().draw("obstacle",
-		getTransform()->position.x, getTransform()->position.y, 0, 255, true);
+	TextureManager::Instance().draw("obstacle", getTransform()->position.x, getTransform()->position.y, this, 0, 255, true);
 }
 
 void Obstacle::update()

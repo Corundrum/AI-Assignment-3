@@ -12,12 +12,13 @@ public:
 	// destructor
 	~Obstacle();
 	
+
 	// life cycle functions
 	void draw() override;
 	void update() override;
 	void clean() override;
 private:
-	
+
 };
 
 #endif /* defined (__OBSTACLE__) */

@@ -115,10 +115,10 @@ bool CollisionManager::AABBCheckWithBuffer(GameObject* object1, GameObject* obje
 		p1 += glm::vec2(-p1Width * 0.5f, -p1Height * 0.5f);
 	}
 
-	if (object2->isCentered())
+	/*if (object2->isCentered())
 	{
 		p2 += glm::vec2(-p2Width * 0.5f, -p2Height * 0.5f);
-	}
+	}*/
 
 	// Add buffers.
 	p2.x -= (buffer / 2);
